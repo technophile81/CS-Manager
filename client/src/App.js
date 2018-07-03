@@ -11,6 +11,7 @@ import PostMaterial from './pages/PostMaterial';
 class App extends Component {
   render() {
     return (
+      <Router history={history}>
         <div className="App">
           <header className="App-header">
             <h1 className="App-title">This is my silly app</h1>
@@ -19,6 +20,9 @@ class App extends Component {
             Making sure this is working. Much testing! Why are you not routing?
         </p>
 
+         <Route exact path="/post" component={PostMaterial}
+         />
+
           {/* <Route exact path="/materials" render={
             (props) => {
               return(<MaterialList {...props} />)
@@ -26,6 +30,7 @@ class App extends Component {
           } /> */}
 
         </div>
+        </Router>
     );
   }
 }
