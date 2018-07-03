@@ -20,6 +20,7 @@ class App extends Component {
             Making sure this is working. Much testing! Why are you not routing?
         </p>
           <PostMaterial />
+          <MaterialList />
           <Route exact path="/post" component={PostMaterial}
           />
 
