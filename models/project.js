@@ -22,10 +22,10 @@ const projectSchema = new Schema({
         type: Boolean, 
         required: false 
     },
-    projectNote: {
+    projectNote: [{
         type: Schema.Types.ObjectId,
         ref: "projectNote"
-    }
+    }]
 });
 
 const Project = mongoose.model("Project", projectSchema);

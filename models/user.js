@@ -13,22 +13,28 @@ const userSchema = new Schema({
     // Array that stores ObjectIds
     // Ref property links ObjectIds to the models
     // Allows me to populate the User with any associated models
-    project: [
+    Project: [
         {
             type: Schema.Types.ObjectId,
-            ref: "project"
+            ref: "Project"
         }
     ],
-    inventory: [
+    Inventory: [
         {
             type: Schema.Types.ObjectId,
-            ref: "inventory"
+            ref: "Inventory"
         }
     ],
-    credential: [
+    Credential: [
         {
             type: Schema.Types.ObjectId,
-            ref: "credential"
+            ref: "Credential"
+        }
+    ],
+    Material: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Material"
         }
     ],
 
