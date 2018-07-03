@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const materialSchema = new Schema({
+const MaterialSchema = new Schema({
 
     materialSKU: { 
         type: String, 
@@ -25,6 +25,6 @@ const materialSchema = new Schema({
     }]
 });
 
-const Project = mongoose.model("Project", projectSchema);
+const Material = mongoose.model("Material", MaterialSchema);
 
-module.exports = Project;
+module.exports = Material;
