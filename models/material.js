@@ -11,14 +11,14 @@ const MaterialSchema = new Schema({
         type: String, 
         required: false 
     },
-    materialPrimaryColor: { 
-        type: Boolean, 
+   /* materialPrimaryColor: { 
+        type: Boolean
         required: true 
     },
     materialRepresentation: { 
         type: Boolean, 
         required: false 
-    },
+    },*/
     brandId: [{
         type: Schema.Types.ObjectId,
         ref: "Brand"

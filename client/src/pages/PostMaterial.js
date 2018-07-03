@@ -5,7 +5,9 @@ import axios from "axios"
 class PostMaterial extends React.Component {
   state = {
     materialSKU: "",
-    materialName: ""
+    materialName: "",
+    materialPrimaryColor: "",
+    materialRepresentation: ""
   }
   handleInputChange = event => {
       const {name, value} = event.target;
@@ -14,10 +16,10 @@ class PostMaterial extends React.Component {
   }
   postMaterial = event => {
     event.preventDefault();
-    const { materialSKU, materialName } = this.state;
-    axios.post("/api/materials", {materialSKU, materialName}).then(res => {
+    const { materialSKU, materialName, materialPrimaryColor } = this.state;
+    axios.post("/api/materials", {materialSKU, materialName, materialPrimaryColor}).then(res => {
       console.log(res);
-      this.setState({ materialSKU: "", materialName: ""});
+      this.setState({ materialSKU: "", materialName: "", materialPrimaryColor: ""});
       this.props.history.push("/");
     })
   }
@@ -26,8 +28,8 @@ render(){
     <div>
       <Link to="/">Home</Link>
       <form>
-        <input name="title" onChange={this.handleInputChange}  value={this.materialSKU} />
-        <textarea name="body" onChange={this.handleInputChange} value={this.materialName} />
+        <input name="materialSKU" onChange={this.handleInputChange}  value={this.materialSKU} />
+        <textarea name="materialName" onChange={this.handleInputChange} value={this.materialName} />
         <button onClick={this.postMaterial}>Submit</button>
       </form>
     </div>

@@ -19,7 +19,7 @@ class App extends Component {
           <p className="App-intro">
             Making sure this is working. Much testing! Why are you not routing?
         </p>
-
+<PostMaterial />
          <Route exact path="/post" component={PostMaterial}
          />
 
