@@ -26,12 +26,12 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
 // This allows us to serve files out of the client/build folder
 app.use(express.static("client/build"));
 
-app.get("/", (req, res) => {
+app.get("/api/hello", (req, res) => {
     res.send("hi!!!! hello!!!");
 });
 
 app.get("/api/materials", (req, res) => {
-    console.log(req.data);
+    console.log("testing" + req.data);
     MaterialList.find({}).then(results => res.json(results));
 }); 
  
