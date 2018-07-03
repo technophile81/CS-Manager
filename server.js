@@ -32,7 +32,8 @@ app.get("/api/hello", (req, res) => {
 
 app.get("/api/materials", (req, res) => {
     console.log("testing" + req.data);
-    MaterialList.find({}).then(results => res.json(results));
+    res.json(req.body);
+    //MaterialList.find({}).then(results => res.json(results));
 }); 
  
 app.listen(PORT, function () {
