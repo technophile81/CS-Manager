@@ -21,7 +21,7 @@ class MaterialList extends Component {
 
     refreshList(){
         console.log("Are you listening?");
-        axios.get("/materials").then( (res) => {
+        axios.get("/api/materials").then( (res) => {
             console.log(res);
             this.setState({ materials: res.data });
         })
