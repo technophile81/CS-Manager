@@ -32,9 +32,16 @@ app.get("/api/hello", (req, res) => {
 
 app.get("/api/materials", (req, res) => {
     console.log("testing" + req.data);
-    res.json(req.body);
+    MaterialList.find({}).then(results => res.json(results) )
     //MaterialList.find({}).then(results => res.json(results));
 }); 
+
+app.post("/api/materials", (req, res) => {
+    console.log(req.body);
+    MaterialList.create(req.body).then(dbMaterialList => {
+        res.json(dbMaterialList);
+    })
+})
  
 app.listen(PORT, function () {
     console.log(`API Server now listening on port ${PORT}`);

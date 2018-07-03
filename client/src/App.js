@@ -3,8 +3,10 @@ import axios from 'axios';
 import './App.css';
 
 import { Router, Route, Redirect } from "react-router-dom";
+import history from "./history"
 
 import MaterialList from './pages/MaterialList';
+import PostMaterial from './pages/PostMaterial';
 
 class App extends Component {
   render() {
