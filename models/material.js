@@ -3,26 +3,39 @@ const Schema = mongoose.Schema;
 
 const MaterialSchema = new Schema({
 
-    materialSKU: { 
-        type: String, 
-        required: false 
+    materialSKU: {
+        type: String,
+        required: false
     },
-    materialName: { 
-        type: String, 
-        required: false 
+    materialName: {
+        type: String,
+        required: false
     },
-   /* materialPrimaryColor: { 
-        type: Boolean
-        required: true 
+    materialRed: {
+        type: Number,
+        required: true
     },
-    materialRepresentation: { 
-        type: Boolean, 
-        required: false 
-    },*/
-    brandId: [{
+    materialGreen: {
+        type: Number,
+        required: true
+    },
+    materialBlue: {
+        type: Number,
+        required: true
+    },
+    materialHSL: {
+        type: Number,
+        required: true
+    },
+
+    materialRepresentation: {
+        type: String,
+        required: false
+    },
+    brandId: {
         type: Schema.Types.ObjectId,
         ref: "Brand"
-    }]
+    }
 });
 
 const Material = mongoose.model("Material", MaterialSchema);

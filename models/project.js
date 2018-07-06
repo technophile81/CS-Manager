@@ -7,7 +7,7 @@ const projectSchema = new Schema({
         require: false 
     },
     projectDescription: { 
-        type: Text, 
+        type: String, 
         required: false 
     },
     projectUrl: { 

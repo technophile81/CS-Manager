@@ -7,7 +7,7 @@ const projectNoteSchema = new Schema({
         require: false 
     },
     noteText: { 
-        type: Text, 
+        type: String, 
         required: false 
     }
 });

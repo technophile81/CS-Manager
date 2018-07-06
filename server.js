@@ -23,25 +23,31 @@ app.use(bodyParser.json());
 // Mongoose
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
 
-// This allows us to serve files out of the client/build folder
-app.use(express.static("client/build"));
+// Controllers
+
+const materialsController = require("./controllers/materials.js");
+
+app.use(materialsController);
 
 app.get("/api/hello", (req, res) => {
     res.send("hi!!!! hello!!!");
 });
 
-app.get("/api/materials", (req, res) => {
-    console.log("testing" + req.data);
-    MaterialList.find({}).then(results => res.json(results) )
-    //MaterialList.find({}).then(results => res.json(results));
-}); 
+// This allows us to serve files out of the client/build folder
+app.use(express.static("client/build"));
 
-app.post("/api/materials", (req, res) => {
-    console.log(req.body);
-    MaterialList.create(req.body).then(dbMaterialList => {
-        res.json(dbMaterialList);
-    })
-})
+
+// app.get("/api/materials", (req, res) => {
+//     console.log("testing" + req.body);
+//     MaterialList.find({}).sort({createdAt: -1}).then(results => res.json(results) )
+// }); 
+
+// app.post("/api/materials", (req, res) => {
+//     console.log(req.body);
+//     MaterialList.create(req.body).then(dbMaterialList => {
+//         res.json(dbMaterialList);
+//     })
+// })
  
 app.listen(PORT, function () {
     console.log(`API Server now listening on port ${PORT}`);
