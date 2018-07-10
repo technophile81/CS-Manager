@@ -2,31 +2,39 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const projectSchema = new Schema({
-    projectPhoto: { 
-        type: String, 
-        require: false 
+    projectPhoto: {
+        type: String,
+        require: false
     },
-    projectDescription: { 
-        type: String, 
-        required: false 
+    projectDescription: {
+        type: String,
+        required: false
     },
-    projectUrl: { 
-        type: String, 
-        required: false 
+    projectUrl: {
+        type: String,
+        required: false
     },
-    projectActive: { 
-        type: Boolean, 
-        required: true 
+    projectActive: {
+        type: Boolean,
+        required: true
     },
-    projectPercentComplete: { 
-        type: Boolean, 
-        required: false 
+    projectPercentComplete: {
+        type: Boolean,
+        required: false
     },
     projectNote: [{
         type: Schema.Types.ObjectId,
         ref: "projectNote"
     }]
-});
+},
+    {
+        timestamps:
+            {
+                createdAt: 'created_at',
+                updatedAt: 'updated_at'
+            }
+    }
+);
 
 const Project = mongoose.model("Project", projectSchema);
 

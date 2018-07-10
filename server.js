@@ -14,7 +14,7 @@ const MaterialList = require("./models/material");
 require('dotenv').config();
 
 // Port
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,8 +26,11 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
 // Controllers
 
 const materialsController = require("./controllers/materials.js");
+const projectsController = require("./controllers/projects.js");
 
 app.use(materialsController);
+app.use(projectsController);
+
 
 app.get("/api/hello", (req, res) => {
     res.send("hi!!!! hello!!!");
