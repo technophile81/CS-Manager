@@ -1,9 +1,7 @@
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
+const db = require('../models');
+const path = require('path');
 
-var db = require('./models');
-
-const csvFilePath = './db/dmc-floss.csv';
+const csvFilePath = path.join(__dirname, '../db/dmc-floss.csv');
 const csv = require('csvtojson');
 
 /**
