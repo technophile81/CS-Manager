@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
 
 module.exports = {
+    getFakeUserId: function () {
+        return mongoose.Types.ObjectId('000000000000000000000001');
+    },
+
     Inventory: require('./inventory'),
     Credential: require('./credential'),
     Material: require('./material'),
