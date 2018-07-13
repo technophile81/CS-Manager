@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const path = require("path");
 
@@ -11,13 +12,13 @@ require('dotenv').config();
 // Port
 const PORT = process.env.PORT || 3000;
 
+// Logging
+app.use(morgan('dev'));
+
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-// Mongoose
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
 
 // Routes
 const routes = require("./routes");
