@@ -40,7 +40,7 @@ async function getOne (id, userId) {
 async function getMany (unused, userId, orderBy) {
     let query = {};
     if (userId) {
-	query = { '$or' : [ { userId: null }, { userId: userId } ] };
+        query = { userId: userId };
     }
 
     // TODO: handle orderBy
