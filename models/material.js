@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 const MaterialSchema = new Schema({
     materialSKU: {
         type: String,
@@ -43,6 +44,7 @@ const MaterialSchema = new Schema({
         ref: "User",
     },
 });
+
 
 const Material = mongoose.model("Material", MaterialSchema);
 

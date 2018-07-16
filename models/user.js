@@ -1,45 +1,19 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+
+const UserSchema = new Schema({
     userName: {
         type: String,
-        require: true
+        required: true,
     },
     userEmail: {
         type: String,
-        required: true
+        required: true,
     },
-    // Array that stores ObjectIds
-    // Ref property links ObjectIds to the models
-    // Allows me to populate the User with any associated models
-    Project: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Project"
-        }
-    ],
-    Inventory: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Inventory"
-        }
-    ],
-    Credential: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Credential"
-        }
-    ],
-    Material: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Material"
-        }
-    ],
-
 });
 
-const User = mongoose.model("User", userSchema);
+
+const User = mongoose.model("User", UserSchema);
 
 module.exports = User;

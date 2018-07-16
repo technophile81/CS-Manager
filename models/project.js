@@ -1,16 +1,44 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const projectSchema = new Schema({
-    projectPhoto: {
-        type: String,
-        require: false
+
+const ProjectMaterialRequirementSchema = new Schema({
+    materialId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Material',
+        required: true,
     },
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
+});
+
+
+const ProjectNoteSchema = new Schema({
+    noteText: {
+        type: String,
+        required: true,
+    },
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
+});
+
+
+const ProjectSchema = new Schema({
     projectDescription: {
         type: String,
         required: false
     },
-    projectUrl: {
+    projectInfoUrl: {
+        type: String,
+        required: false
+    },
+    projectPhotoUrl: {
         type: String,
         required: false
     },
@@ -19,23 +47,19 @@ const projectSchema = new Schema({
         required: true
     },
     projectPercentComplete: {
-        type: Boolean,
+        type: Number,
         required: false
     },
-    projectNote: [{
-        type: Schema.Types.ObjectId,
-        ref: "projectNote"
-    }]
-},
-    {
-        timestamps:
-            {
-                createdAt: 'created_at',
-                updatedAt: 'updated_at'
-            }
+    projectMaterialRequirements: [ProjectMaterialRequirementSchema],
+    projectNotes: [ProjectNoteSchema],
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
     }
-);
+});
 
-const Project = mongoose.model("Project", projectSchema);
+
+const Project = mongoose.model("Project", ProjectSchema);
 
 module.exports = Project;

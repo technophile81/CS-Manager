@@ -8,13 +8,12 @@ module.exports = {
         return mongoose.Types.ObjectId('000000000000000000000001');
     },
 
-    Inventory: require('./inventory'),
+    Brand: require('./brand')
     Credential: require('./credential'),
+    Inventory: require('./inventory'),
     Material: require('./material'),
     Project: require('./project'),
-    ProjectNote: require('./projectNote'),
     Shopping: require('./shopping'),
     User: require('./user'),
-    Brand: require('./brand')
 };
 
