@@ -85,6 +85,7 @@ async function getMaterialRequirements (projectId) {
     let result = {
         neededToMeetRequirements: {},
         shouldAllocateFromInventory: {},
+        shouldPurchase: {},
         totalAvailableInInventory: {},
         totalRequired: {},
     };
@@ -105,10 +106,12 @@ async function getMaterialRequirements (projectId) {
         result.neededToMeetRequirements[materialId] -= (result.allocatedFromInventory[materialId] || 0);
         result.totalAvailableInInventory[materialId] = (availableMaterials[materialId] || 0);
 
-        if (result.totalAvailableInInventory[materialId] > result.neededToMeetRequirements[materialId]) {
+        if (result.totalAvailableInInventory[materialId] >= result.neededToMeetRequirements[materialId]) {
             result.shouldAllocateFromInventory[materialId] = result.neededToMeetRequirements[materialId];
+            result.shouldPurchase[materialId] = 0;
         } else {
             result.shouldAllocateFromInventory[materialId] = result.totalAvailableInInventory[materialId];
+            result.shouldPurchase[materialId] = result.neededToMeetRequirements[materialId] - result.totalAvailableInInventory[materialId];
         }
 
         if (result.allocatedFromInventory[materialId] === undefined) {
