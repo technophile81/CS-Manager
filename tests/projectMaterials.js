@@ -92,7 +92,8 @@ async function runMaterialsAllocation (project, before) {
 
 function runSuccessTest(resolve, reject) {
     axios.post('/api/projects', {
-        name: 'Create Test',
+        name: 'Material Test',
+        active: true,
     }).then((project) => {
         runMaterialsTest(project.data).then((before) => {
             console.log(before);

@@ -83,6 +83,7 @@ async function deleteOne (projectId) {
 
 async function getMaterialRequirements (projectId) {
     let result = {
+        allocatedFromInventory: {},
         neededToMeetRequirements: {},
         shouldAllocateFromInventory: {},
         shouldPurchase: {},
@@ -91,6 +92,10 @@ async function getMaterialRequirements (projectId) {
     };
 
     const project = await db.Project.findById(projectId);
+    if (!project) {
+        return result;
+    }
+
     const projectRequirements = await project.getAllMaterialRequirements();
     const availableMaterials = await db.Inventory.getAvailableMaterials(project.userId);
 
