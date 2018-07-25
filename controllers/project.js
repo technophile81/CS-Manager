@@ -13,7 +13,7 @@ async function allocateOneMaterial (projectId, materialId) {
 
 
 async function createNote (projectId, noteData) {
-    const project = await db.Project.find({ _id: projectId });
+    const project = await db.Project.findById(projectId);
 
     project.projectNotes.push(noteData);
 
@@ -35,7 +35,7 @@ async function createOne (data, userId) {
 
 
 async function deleteNote (projectId, noteId) {
-    const project = await db.Project.find({ _id: projectId });
+    const project = await db.Project.findById(projectId);
 
     project.projectNotes.id(noteId).remove();
 
@@ -99,13 +99,46 @@ async function releaseOneMaterial (projectId, materialId) {
 
 
 async function replaceMaterialRequirement (projectId, materialId, materialQuantity) {
-    // TODO
-    // modify a material's required quantity and automatically fix things to make it work
+    const project = await db.Project.findById(projectId);
+
+    let currentRequired = 0;
+    let currentRequirements = [];
+
+    for (let req of project.materialRequirements) {
+        if (req.materialId === materialId) {
+            currentRequired++;
+            currentRequirements.push(req._id);
+        }
+    }
+
+    let currentAllocation = await db.Inventory.countDocuments({
+        projectId: projectId,
+        materialId: materialId,
+    }).exec();
+
+    while (materialQuantity < currentRequired) {
+        let req = { materialId: materialId }; 
+        project.materialRequirements.push(req);
+
+        materialQuantity++;
+    }
+
+    while (materialQuantity > currentRequired) {
+        let reqId = currentRequirements.pop();
+        project.materialRequirements.id(reqId).remove();
+
+        materialQuantity--;
+    }
+
+    // NOTE: this method DOES NOT modify material allocations
+
+    const result = await project.save();
+    return result;
 }
 
 
 async function updateNote (projectId, noteId, noteData) {
-    const project = await db.Project.find({ _id: projectId });
+    const project = await db.Project.findById(projectId);
 
     const note = project.projectNotes.id(noteId);
     if (!note) {

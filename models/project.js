@@ -8,11 +8,6 @@ const ProjectMaterialRequirementSchema = new Schema({
         ref: 'Material',
         required: true,
     },
-}, {
-    timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
-    }
 });
 
 
