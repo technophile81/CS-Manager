@@ -8,13 +8,15 @@ let safeHandler = require("../utils/safeHandler");
 
 
 async function addInventory(req, res) {
-    let created = await controllers.Inventory.createOne(req.body, req.user.userId);
-
-    if (Array.isArray(created)) {
-        res.status(created[0]).send(created[1]);
-        return;
-    }
-    res.status(201).json(created);
+    controllers.Inventory.createOne(req.body, req.user.userId).then((created) => {
+        res.status(201).json(created);
+    }).catch((err) => {
+        if (err.name == 'ValidationError') {
+            res.status(422).send(err.message);
+        } else {
+            throw err;
+        }
+    });
 }
 
 
