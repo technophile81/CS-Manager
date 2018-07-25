@@ -7,6 +7,22 @@ let isAuthenticated = require("../utils/isAuthenticated");
 let safeHandler = require("../utils/safeHandler");
 
 
+async function checkProject(req, res, next) {
+    const project = await controllers.Project.getOne(req.params.id, req.user.userId);
+    if (!project) {
+        return res.status(404).send("");
+    }
+
+    // Only allow users to delete their own projects
+    if (String(project.userId) !== String(req.user.userId)) {
+        return res.status(403).send("");
+    }
+
+    req.project = project;
+    return next();
+}
+
+
 async function createProject(req, res) {
     controllers.Project.createOne(req.body, req.user.userId).then((created) => {
         res.status(201).json(created);
@@ -21,31 +37,13 @@ async function createProject(req, res) {
 
 
 async function deleteProject(req, res) {
-    let project = await controllers.Project.getOne(req.params.id, req.user.userId);
-    if (!project) {
-        res.status(404).send("");
-        return;
-    }
-
-    // Only allow users to delete their own projects
-    if (String(project.userId) !== String(req.user.userId)) {
-        res.status(403).send("");
-        return;
-    }
-
-    project = await controllers.Project.deleteOne(req.params.id);
+    await controllers.Project.deleteOne(req.params.id);
     res.status(204).send("");
 }
 
 
 async function getProject(req, res) {
-    let project = await controllers.Project.getOne(req.params.id. req.user.userId);
-    if (!project) {
-        res.status(404).send("");
-        return;
-    }
-
-    res.json(project);
+    res.json(req.project);
 }
 
 
@@ -56,28 +54,51 @@ async function getProjects(req, res) {
 
 
 async function updateProject(req, res) {
-    let project = await controllers.Project.getOne(req.params.id, req.user.userId);
-    if (!project) {
-        res.status(404).send("");
-        return;
-    }
-
-    // Only allow users to edit their own projects
-    if (String(project.userId) !== String(req.user.userId)) {
-        res.status(403).send("");
-        return;
-    }
-
-    project = await controllers.Project.updateOne(req.params.id, req.body);
+    const project = await controllers.Project.updateOne(req.params.id, req.body);
     res.json(project);
 }
 
 
-router.delete("/api/projects/:id", isAuthenticated, safeHandler(deleteProject));
-router.get("/api/projects/:id", isAuthenticated, safeHandler(getProject));
+async function getProjectMaterialRequirements(req, res) {
+    let result = await controllers.Project.getMaterialRequirements(req.params.id);
+    res.json(result);
+}
+
+
+async function replaceProjectMaterialRequirement(req, res) {
+    let result = await controllers.Project.replaceMaterialRequirement(req.params.id, req.params.materialId, req.body.quantity);
+    res.json(result);
+}
+
+
+async function createProjectNote(req, res) {
+    // TODO
+}
+
+
+async function deleteProjectNote(req, res) {
+    // TODO
+}
+
+
+async function updateProjectNote(req, res) {
+    // TODO
+}
+
+
+router.delete("/api/projects/:id", isAuthenticated, checkProject, safeHandler(deleteProject));
+router.get("/api/projects/:id", isAuthenticated, checkProject, safeHandler(getProject));
 router.get("/api/projects", isAuthenticated, safeHandler(getProjects));
 router.post("/api/projects", isAuthenticated, safeHandler(createProject));
-router.put("/api/projects/:id", isAuthenticated, safeHandler(updateProject));
+router.put("/api/projects/:id", isAuthenticated, checkProject, safeHandler(updateProject));
+
+router.get("/api/projects/:id/materials", isAuthenticated, checkProject, safeHandler(getProjectMaterialRequirements));
+router.post("/api/projects/:id/materials/:materialId", isAuthenticated, checkProject, safeHandler(replaceProjectMaterialRequirement));
+router.put("/api/projects/:id/materials/:materialId", isAuthenticated, checkProject, safeHandler(replaceProjectMaterialRequirement));
+
+router.delete("/api/projects/:id/notes/:noteId", isAuthenticated, checkProject, safeHandler(deleteProjectNote));
+router.post("/api/projects/:id/notes", isAuthenticated, checkProject, safeHandler(createProjectNote));
+router.put("/api/projects/:id/notes/:noteId", isAuthenticated, checkProject, safeHandler(updateProjectNote));
 
 
 module.exports = router;
