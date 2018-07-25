@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Initialize Mongoose for models
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/CS-Manager");
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/CS-Manager');
 
 module.exports = {
     getFakeUserId: function () {

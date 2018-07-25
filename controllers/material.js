@@ -2,25 +2,30 @@ const db = require("../models");
 
 
 async function createOne (data, userId) {
-    data.userId = userId;
-    let result = await db.Material.create(data).exec();
+    if (userId) {
+        data.userId = userId;
+    }
+
+    const material = new db.Material(data);
+    const result = material.save();
+
     return result;
 }
 
 
-async function deleteOne (id) {
-    if (!id) {
+async function deleteOne (materialId) {
+    if (!materialId) {
 	return undefined;
     }
 
-    let result = await db.Material.remove({ _id: id }).exec();
+    let result = await db.Material.remove({ _id: materialId }).exec();
     return result;
 }
 
 
-async function getOne (id, userId) {
+async function getOne (materialId, userId) {
     let query = {
-	_id: id,
+	_id: materialId,
     };
 
     if (userId) {
@@ -51,10 +56,10 @@ async function getMany (unused, userId, orderBy) {
 }
 
 
-async function updateOne (id, data) {
+async function updateOne (materialId, data) {
     delete data.userId;
 
-    let result = await db.Material.update({ _id: id }, { '$set' : data }).exec();
+    let result = await db.Material.update({ _id: materialId }, { '$set' : data }).exec();
     return result;
 }
 

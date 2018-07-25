@@ -8,8 +8,15 @@ let safeHandler = require("../utils/safeHandler");
 
 
 async function createProject(req, res) {
-    let created = await controllers.Project.createOne(req.body, req.user.userId);
-    res.status(201).json(created);
+    controllers.Project.createOne(req.body, req.user.userId).then((created) => {
+        res.status(201).json(created);
+    }).catch((err) => {
+        if (err.name == 'ValidationError') {
+            res.status(422).send(err.message);
+        } else {
+            throw err;
+        }
+    });
 }
 
 

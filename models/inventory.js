@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
@@ -15,11 +15,11 @@ const InventorySchema = new Schema({
     },
     projectId: {
         type: Schema.Types.ObjectId,
-        ref: "Project",
+        ref: 'Project',
     },
 });
 
 
-const Inventory = mongoose.model("Inventory", InventorySchema);
+const Inventory = mongoose.model('Inventory', InventorySchema);
 
 module.exports = Inventory;

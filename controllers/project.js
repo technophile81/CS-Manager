@@ -1,54 +1,69 @@
 const db = require("../models");
 
 
-async function allocateAllMaterials (id, materialId) {
+async function allocateAllMaterials (projectId, materialId) {
     // TODO
     // if materialId is not null, only allocate all possible of that material
 }
 
 
-async function allocateOneMaterial (id, materialId) {
+async function allocateOneMaterial (projectId, materialId) {
     // TODO
 }
 
 
-async function createNote (id, noteData) {
-    // TODO
+async function createNote (projectId, noteData) {
+    const project = await db.Project.find({ _id: projectId });
+
+    project.projectNotes.push(noteData);
+
+    const result = await project.save();
+    return result;
 }
 
 
 async function createOne (data, userId) {
-    data.userId = userId;
-    let result = await db.Project.create(data).exec();
+    if (userId) {
+        data.userId = userId;
+    }
+
+    const project = new db.Project(data);
+    const result = project.save();
+
     return result;
 }
 
 
-async function deleteNote (id, noteId) {
-    // TODO
+async function deleteNote (projectId, noteId) {
+    const project = await db.Project.find({ _id: projectId });
+
+    project.projectNotes.id(noteId).remove();
+
+    const result = await project.save();
+    return result;
 }
 
 
-async function deleteOne (id) {
-    if (!id) {
+async function deleteOne (projectId) {
+    if (!projectId) {
         return undefined;
     }
 
-    let result = await db.Project.remove({ _id: id }).exec();
+    const result = await db.Project.remove({ _id: projectId }).exec();
     return result;
 }
 
 
-async function getOne (id, userId) {
+async function getOne (projectId, userId) {
     let query = {
-        _id: id,
+        _id: projectId,
     };
 
     if (userId) {
         query.userId = userId;
     }
 
-    let result = await db.Project.find(query).exec();
+    const result = await db.Project.find(query).exec();
 
     if (result.length !== 1) {
         return null;
@@ -67,37 +82,47 @@ async function getMany (unused, userId, orderBy) {
     // TODO: handle orderBy
     let sort = {};
 
-    let result = await db.Project.find(query).sort(sort).exec();
+    const result = await db.Project.find(query).sort(sort).exec();
     return result;
 }
 
 
-async function releaseAllMaterials (id, materialId) {
+async function releaseAllMaterials (projectId, materialId) {
     // TODO
     // if materialId is not null, only release all possible of that material
 }
 
 
-async function releaseOneMaterial (id, materialId) {
+async function releaseOneMaterial (projectId, materialId) {
     // TODO
 }
 
 
-async function replaceMaterialRequirement (id, materialId, materialQuantity) {
+async function replaceMaterialRequirement (projectId, materialId, materialQuantity) {
     // TODO
     // modify a material's required quantity and automatically fix things to make it work
 }
 
 
-async function updateNote (id, noteId, noteData) {
-    // TODO
+async function updateNote (projectId, noteId, noteData) {
+    const project = await db.Project.find({ _id: projectId });
+
+    const note = project.projectNotes.id(noteId);
+    if (!note) {
+        return null;
+    }
+
+    note.set(noteData);
+
+    const result = await project.save();
+    return result;
 }
 
 
-async function updateOne (id, data) {
+async function updateOne (projectId, data) {
     delete data.userId;
 
-    let result = await db.Project.update({ _id: id }, { '$set' : data }).exec();
+    const result = await db.Project.update({ _id: projectId }, { '$set' : data }).exec();
     return result;
 }
 

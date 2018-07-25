@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
@@ -10,56 +10,68 @@ const ProjectMaterialRequirementSchema = new Schema({
     },
 }, {
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
     }
 });
 
 
 const ProjectNoteSchema = new Schema({
-    noteText: {
+    text: {
         type: String,
         required: true,
     },
 }, {
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
     }
 });
 
 
 const ProjectSchema = new Schema({
-    projectDescription: {
-        type: String,
-        required: false
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
-    projectInfoUrl: {
+
+    name: {
         type: String,
-        required: false
+        required: true,
     },
-    projectPhotoUrl: {
+    description: {
         type: String,
-        required: false
+        required: false,
     },
-    projectActive: {
+    infoUrl: {
+        type: String,
+        required: false,
+    },
+    photoUrl: {
+        type: String,
+        required: false,
+    },
+    active: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false,
     },
-    projectPercentComplete: {
+    percentComplete: {
         type: Number,
-        required: false
+        required: true,
+        default: 0,
     },
-    projectMaterialRequirements: [ProjectMaterialRequirementSchema],
-    projectNotes: [ProjectNoteSchema],
+    materialRequirements: [ProjectMaterialRequirementSchema],
+    notes: [ProjectNoteSchema],
 }, {
     timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
     }
 });
 
 
-const Project = mongoose.model("Project", ProjectSchema);
+const Project = mongoose.model('Project', ProjectSchema);
 
 module.exports = Project;

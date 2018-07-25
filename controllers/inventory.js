@@ -2,25 +2,30 @@ const db = require("../models");
 
 
 async function createOne (data, userId) {
-    data.userId = userId;
-    let result = await db.Inventory.create(data).exec();
+    if (userId) {
+        data.userId = userId;
+    }
+
+    const inventory = new db.Inventory(data);
+    const result = inventory.save();
+
     return result;
 }
 
 
-async function deleteOne (id) {
-    if (!id) {
+async function deleteOne (inventoryId) {
+    if (!inventoryId) {
 	return undefined;
     }
 
-    let result = await db.Inventory.remove({ _id: id }).exec();
+    let result = await db.Inventory.remove({ _id: inventoryId }).exec();
     return result;
 }
 
 
-async function getOne (id, userId) {
+async function getOne (inventoryId, userId) {
     let query = {
-	_id: id,
+	_id: inventoryId,
     };
 
     if (userId) {

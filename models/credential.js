@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
@@ -8,21 +8,21 @@ const CredentialSchema = new Schema({
         ref: 'User',
         required: true,
     },
-    credentialSource: {
+    source: {
         type: String,
         required: true,
     },
-    credentialName: {
+    name: {
         type: String,
         required: true,
     },
-    credentialSecret: {
+    secret: {
         type: String,
         required: true,
     },
 });
 
 
-const Credential = mongoose.model("Credential", CredentialSchema);
+const Credential = mongoose.model('Credential', CredentialSchema);
 
 module.exports = Credential;

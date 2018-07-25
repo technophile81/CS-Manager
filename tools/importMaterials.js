@@ -39,22 +39,27 @@ function rgbToHsl(r, g, b) {
     return [Math.floor(h * 360), Math.floor(s * 100), Math.floor(l * 100)];
 }
 
-// WARNING: This will REMOVE all existing entries in the database.
-db.Material.remove({}).then(() => {
-    csv()
-        .fromFile(csvFilePath)
-        .then((materialsList) => {
-            let promises = [];
+// WARNING: This will REMOVE all existing entries in the project database.
+db.Brand.findOne({ name: 'DMC' }).then((brand) => {
+    db.Material.remove({}).then(() => {
+        csv()
+            .fromFile(csvFilePath)
+            .then((materialsList) => {
+                let promises = [];
 
-            for (let material of materialsList) {
-                let [h, s, l] = rgbToHsl(material.materialRed, material.materialGreen, material.materialBlue);
-                material.materialHSL = (h * 1000000) + (s * 1000) + l;
+                for (let material of materialsList) {
+                    let [h, s, l] = rgbToHsl(material.red, material.green, material.blue);
+                    material.hue = h;
+                    material.saturation = s;
+                    material.lightness = l;
+                    material.brandId = brand._id;
 
-                promises.push(db.Material.create(material));
-            }
+                    promises.push(db.Material.create(material));
+                }
 
-            Promise.all(promises).then((results) => {
-                console.log("Imported " + results.length + " colors. Press CTRL-C to exit.");
-            })
-        });
+                Promise.all(promises).then((results) => {
+                    console.log("Imported " + results.length + " colors. Press CTRL-C to exit.");
+                });
+            });
+    });
 });
