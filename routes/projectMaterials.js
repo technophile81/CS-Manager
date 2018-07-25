@@ -7,16 +7,34 @@ let isAuthenticated = require("../utils/isAuthenticated");
 let safeHandler = require("../utils/safeHandler");
 
 
-async function replaceProjectMaterialRequirement(req, res) {
+async function getProjectMaterialRequirements(req, res) {
     let project = await controllers.Project.getOne(req.params.id, req.user.userId);
     if (!project) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
     // Only allow users to delete their own projects
-    if (project.userId !== req.user.userId) {
-        res.status(403);
+    if (String(project.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
+        return;
+    }
+
+    let result = await controllers.Project.getMaterialRequirements(req.params.id);
+    res.json(result);
+}
+
+
+async function replaceProjectMaterialRequirement(req, res) {
+    let project = await controllers.Project.getOne(req.params.id, req.user.userId);
+    if (!project) {
+        res.status(404).send("");
+        return;
+    }
+
+    // Only allow users to delete their own projects
+    if (String(project.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
         return;
     }
 
@@ -25,6 +43,8 @@ async function replaceProjectMaterialRequirement(req, res) {
 }
 
 
+router.get("/api/projects/:id/materials", isAuthenticated, safeHandler(getProjectMaterialRequirements));
+router.post("/api/projects/:id/materials/:materialId", isAuthenticated, safeHandler(replaceProjectMaterialRequirement));
 router.put("/api/projects/:id/materials/:materialId", isAuthenticated, safeHandler(replaceProjectMaterialRequirement));
 
 

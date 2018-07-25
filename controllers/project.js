@@ -54,6 +54,41 @@ async function deleteOne (projectId) {
 }
 
 
+async function getMaterialRequirements (projectId) {
+    let result = {
+        neededToMeetRequirements: {},
+        shouldAllocateFromInventory: {},
+        totalAvailableInInventory: {},
+        totalRequired: {},
+    };
+
+    const project = await db.Project.findById(projectId);
+    const projectRequirements = await project.getAllMaterialRequirements();
+    const availableMaterials = await db.Inventory.getAvailableMaterials(project.userId);
+
+    result.allocatedFromInventory = await db.Inventory.getAllocatedMaterials(projectId);
+
+    // Transform the internal format to something simpler
+    for (let materialId of Object.keys(projectRequirements)) {
+        result.totalRequired[materialId] = projectRequirements[materialId].quantity;
+        result.neededToMeetRequirements[materialId] = projectRequirements[materialId].quantity;
+    }
+
+    for (let materialId of Object.keys(result.neededToMeetRequirements)) {
+        result.neededToMeetRequirements[materialId] -= (result.allocatedFromInventory[materialId] || 0);
+        result.totalAvailableInInventory[materialId] = (availableMaterials[materialId] || 0);
+
+        if (result.totalAvailableInInventory[materialId] > result.neededToMeetRequirements[materialId]) {
+            result.shouldAllocateFromInventory[materialId] = result.neededToMeetRequirements[materialId];
+        } else {
+            result.shouldAllocateFromInventory[materialId] = result.totalAvailableInInventory[materialId];
+        }
+    }
+
+    return result;
+}
+
+
 async function getOne (projectId, userId) {
     if (String(projectId).length != 24) {
         return null;
@@ -106,33 +141,25 @@ async function releaseOneMaterial (projectId, materialId) {
 async function replaceMaterialRequirement (projectId, materialId, materialQuantity) {
     const project = await db.Project.findById(projectId);
 
-    let currentRequired = 0;
-    let currentRequirements = [];
+    const currentRequirements = project.getRequirementsByMaterial(materialId);
 
-    for (let req of project.materialRequirements) {
-        if (req.materialId === materialId) {
-            currentRequired++;
-            currentRequirements.push(req._id);
-        }
-    }
-
-    let currentAllocation = await db.Inventory.countDocuments({
+    const currentAllocation = await db.Inventory.count({
         projectId: projectId,
         materialId: materialId,
     }).exec();
 
-    while (materialQuantity < currentRequired) {
+    while (materialQuantity > currentRequirements.quantity) {
         let req = { materialId: materialId }; 
         project.materialRequirements.push(req);
 
-        materialQuantity++;
+        materialQuantity--;
     }
 
-    while (materialQuantity > currentRequired) {
-        let reqId = currentRequirements.pop();
+    while (materialQuantity < currentRequirements.quantity) {
+        let reqId = currentRequirements.ids.pop();
         project.materialRequirements.id(reqId).remove();
 
-        materialQuantity--;
+        materialQuantity++;
     }
 
     // NOTE: this method DOES NOT modify material allocations
@@ -174,6 +201,7 @@ module.exports = {
     deleteOne,
     getOne,
     getMany,
+    getMaterialRequirements,
     replaceMaterialRequirement,
     updateNote,
     updateOne,
