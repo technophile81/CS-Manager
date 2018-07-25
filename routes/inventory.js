@@ -34,7 +34,7 @@ async function deleteInventory(req, res) {
     }
 
     inventory = await controllers.Inventory.deleteOne(req.params.id);
-    res.status(204);
+    res.status(204).send("");
 }
 
 
