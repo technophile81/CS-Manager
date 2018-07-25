@@ -5,10 +5,27 @@ const path = require('path');
 async function clearDatabase() {
     await db.Credential.remove({});
     await db.Inventory.remove({});
-    // only clear user-bound materials
-    // await db.Material.remove({});
+    await db.Material.remove({ userId: { '$ne' : null } });
     await db.Project.remove({});
     await db.User.remove({});
+
+    let invisMaterial = new db.Material({
+        brandId: db.getInvisibleUserId(),
+        userId: db.getInvisibleUserId(),
+        name: 'INVISIBLE',
+        red: 0,
+        green: 0,
+        blue: 0,
+        hue: 0,
+        saturation: 0,
+        lightness: 0,
+    });
+    await invisMaterial.save();
+
+    let invisProject = new db.Project({
+        userId: db.getInvisibleUserId(),
+        name: 'INVISIBLE',
+    });
 }
 
 clearDatabase().then(() => {

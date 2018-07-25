@@ -7,6 +7,9 @@ module.exports = {
     getFakeUserId: function () {
         return mongoose.Types.ObjectId('000000000000000000000001');
     },
+    getInvisibleUserId: function () {
+        return mongoose.Types.ObjectId('000000000000000000000002');
+    },
 
     Brand: require('./brand'),
     Credential: require('./credential'),
