@@ -59,6 +59,12 @@ async function updateProject(req, res) {
 }
 
 
+async function allocateProjectMaterials(req, res) {
+    let result = await controllers.Project.allocateMaterials(req.params.id, req.body);
+    res.json(result);
+}
+
+
 async function getProjectMaterialRequirements(req, res) {
     let result = await controllers.Project.getMaterialRequirements(req.params.id);
     res.json(result);
@@ -93,7 +99,7 @@ router.post("/api/projects", isAuthenticated, safeHandler(createProject));
 router.put("/api/projects/:id", isAuthenticated, checkProject, safeHandler(updateProject));
 
 router.get("/api/projects/:id/materials", isAuthenticated, checkProject, safeHandler(getProjectMaterialRequirements));
-router.post("/api/projects/:id/materials/:materialId", isAuthenticated, checkProject, safeHandler(replaceProjectMaterialRequirement));
+router.post("/api/projects/:id/materials", isAuthenticated, checkProject, safeHandler(allocateProjectMaterials));
 router.put("/api/projects/:id/materials/:materialId", isAuthenticated, checkProject, safeHandler(replaceProjectMaterialRequirement));
 
 router.delete("/api/projects/:id/notes/:noteId", isAuthenticated, checkProject, safeHandler(deleteProjectNote));

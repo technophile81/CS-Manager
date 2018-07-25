@@ -20,6 +20,40 @@ const InventorySchema = new Schema({
 });
 
 
+InventorySchema.statics.changeAllocatedMaterials = async function (userId, projectId, materialId, change) {
+    if (change < 0) {
+        const inventory = await this.find({
+            materialId: materialId,
+            projectId: projectId,
+        }).exec();
+
+        for (let item of inventory) {
+            item.projectId = null;
+            await item.save();
+
+            if (++change >= 0) {
+                break;
+            }
+        }
+    } else if (change > 0) {
+        const inventory = await this.find({
+            materialId: materialId,
+            projectId: null,
+            userId: userId,
+        }).exec();
+
+        for (let item of inventory) {
+            item.projectId = projectId;;
+            await item.save();
+
+            if (--change <= 0) {
+                break;
+            }
+        }
+    }
+}
+
+
 InventorySchema.statics.getAllocatedMaterials = async function (projectId) {
     let result = {};
 

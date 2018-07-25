@@ -1,14 +1,41 @@
 const db = require("../models");
 
 
-async function allocateAllMaterials (projectId, materialId) {
-    // TODO
-    // if materialId is not null, only allocate all possible of that material
-}
+async function allocateMaterials (projectId, changes) {
+    const project = await db.Project.findById(projectId);
+    const before = await getMaterialRequirements(projectId);
 
+    let realChanges = {};
 
-async function allocateOneMaterial (projectId, materialId) {
-    // TODO
+    for (let materialId of Object.keys(changes)) {
+        // only allow materials actually available in inventory
+        if (before.totalAvailableInInventory[materialId] === undefined) {
+            continue;
+        }
+
+        if (changes[materialId] < 0) {
+            // only allow release up to the total allocated
+            if (-(changes[materialId]) > before.allocatedFromInventory) {
+                realChanges[materialId] = -(before.allocatedFromInventory);
+            } else {
+                realChanges[materialId] = changes[materialId];
+            }
+        } else if (changes[materialId] > 0) {
+            // only allow allocation up to what the project needs and is available
+            if (changes[materialId] > before.shouldAllocateFromInventory) {
+                realChanges[materialId] = before.shouldAllocateFromInventory;
+            } else {
+                realChanges[materialId] = changes[materialId];
+            }
+        }
+    }
+
+    for (let materialId of Object.keys(realChanges)) {
+        await db.Inventory.changeAllocatedMaterials(project.userId, projectId, materialId, realChanges[materialId]);
+    }
+
+    const after = await getMaterialRequirements(projectId);
+    return after;
 }
 
 
@@ -83,6 +110,10 @@ async function getMaterialRequirements (projectId) {
         } else {
             result.shouldAllocateFromInventory[materialId] = result.totalAvailableInInventory[materialId];
         }
+
+        if (result.allocatedFromInventory[materialId] === undefined) {
+            result.allocatedFromInventory[materialId] = 0;
+        }
     }
 
     return result;
@@ -124,17 +155,6 @@ async function getMany (unused, userId) {
 
     const result = await db.Project.find(query).exec();
     return result;
-}
-
-
-async function releaseAllMaterials (projectId, materialId) {
-    // TODO
-    // if materialId is not null, only release all possible of that material
-}
-
-
-async function releaseOneMaterial (projectId, materialId) {
-    // TODO
 }
 
 
@@ -193,8 +213,7 @@ async function updateOne (projectId, data) {
 
 
 module.exports = {
-    allocateAllMaterials,
-    allocateOneMaterial,
+    allocateMaterials,
     createNote,
     createOne,
     deleteNote,

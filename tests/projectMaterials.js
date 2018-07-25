@@ -13,7 +13,7 @@ async function runMaterialsTest(project) {
         let needed = 1 + Math.floor(Math.random() * 5);
         let available = needed + Math.floor(Math.random() * 5);
 
-        await axios.post('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
+        await axios.put('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
 
         for (let j = 0; j < needed; j++) {
             await axios.post('/api/inventory', { materialId: material._id, projectId: project._id });
@@ -30,7 +30,7 @@ async function runMaterialsTest(project) {
         let needed = 1 + Math.floor(Math.random() * 5);
         let available = needed + Math.floor(Math.random() * 5);
 
-        await axios.post('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
+        await axios.put('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
 
         for (let j = 0; j < available; j++) {
             await axios.post('/api/inventory', { materialId: material._id });
@@ -43,7 +43,7 @@ async function runMaterialsTest(project) {
         let available = 1 + Math.floor(Math.random() * 5);
         let needed = available + 1 + Math.floor(Math.random() * 5);
 
-        await axios.post('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
+        await axios.put('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
 
         for (let j = 0; j < available; j++) {
             await axios.post('/api/inventory', { materialId: material._id, projectId: project._id });
@@ -56,7 +56,7 @@ async function runMaterialsTest(project) {
         let available = 2 + Math.floor(Math.random() * 5);
         let needed = available + 1 + Math.floor(Math.random() * 5);
 
-        await axios.post('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
+        await axios.put('/api/projects/' + project._id + '/materials/' + material._id, { quantity: needed });
 
         for (let j = 0; j < Math.floor(available / 2); j++) {
             await axios.post('/api/inventory', { materialId: material._id, projectId: project._id });
@@ -83,11 +83,27 @@ async function runMaterialsTest(project) {
 }
 
 
+async function runMaterialsAllocation (project, before) {
+    let response = await axios.post('/api/projects/' + project._id + '/materials', before.shouldAllocateFromInventory);
+
+    return response.data;
+}
+
+
 function runSuccessTest(resolve, reject) {
     axios.post('/api/projects', {
         name: 'Create Test',
     }).then((project) => {
-        runMaterialsTest(project.data).then((res) => { resolve(res); });
+        runMaterialsTest(project.data).then((before) => {
+            console.log(before);
+            console.log("\n----------\n\n");
+
+            runMaterialsAllocation(project.data, before).then((after) => {
+                console.log(after);
+
+                resolve("OK");
+            });
+        });
     }).catch((err) => {
         resolve("Failed to create project with status " + err.response.status);
     });
