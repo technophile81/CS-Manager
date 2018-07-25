@@ -55,7 +55,7 @@ async function createOne (data, userId) {
     }
 
     const project = new db.Project(data);
-    const result = project.save();
+    const result = await project.save();
 
     return result;
 }

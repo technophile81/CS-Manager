@@ -7,7 +7,7 @@ async function createOne (data, userId) {
     }
 
     const material = new db.Material(data);
-    const result = material.save();
+    const result = await material.save();
 
     return result;
 }

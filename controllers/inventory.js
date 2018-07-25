@@ -7,7 +7,7 @@ async function createOne (data, userId) {
     }
 
     const inventory = new db.Inventory(data);
-    const result = inventory.save();
+    const result = await inventory.save();
 
     return result;
 }
