@@ -55,11 +55,19 @@ async function deleteOne (projectId) {
 
 
 async function getOne (projectId, userId) {
+    if (String(projectId).length != 24) {
+        return null;
+    }
+
     let query = {
         _id: projectId,
     };
 
     if (userId) {
+        if (String(userId).length != 24) {
+            return null;
+        }
+
         query.userId = userId;
     }
 
@@ -69,20 +77,17 @@ async function getOne (projectId, userId) {
         return null;
     }
 
-    return result;
+    return result[0];
 }
 
 
-async function getMany (unused, userId, orderBy) {
+async function getMany (unused, userId) {
     let query = {};
     if (userId) {
         query = { userId: userId };
     }
 
-    // TODO: handle orderBy
-    let sort = {};
-
-    const result = await db.Project.find(query).sort(sort).exec();
+    const result = await db.Project.find(query).exec();
     return result;
 }
 

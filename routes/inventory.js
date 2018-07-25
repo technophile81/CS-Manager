@@ -23,13 +23,13 @@ async function addInventory(req, res) {
 async function deleteInventory(req, res) {
     let inventory = await controllers.Inventory.getOne(req.params.id, req.user.userId);
     if (!inventory) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
     // Only allow users to delete their own inventorys
-    if (inventory.userId !== req.user.userId) {
-        res.status(403);
+    if (String(inventory.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
         return;
     }
 
@@ -39,7 +39,7 @@ async function deleteInventory(req, res) {
 
 
 async function getAllInventory(req, res) {
-    let inventorys = await controllers.Inventory.getMany(null, req.user.userId, req.query.orderBy);
+    let inventorys = await controllers.Inventory.getMany(null, req.user.userId);
     res.json(inventorys);
 }
 
@@ -47,7 +47,7 @@ async function getAllInventory(req, res) {
 async function getInventory(req, res) {
     let inventory = await controllers.Inventory.getOne(req.params.id. req.user.userId);
     if (!inventory) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 

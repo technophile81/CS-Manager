@@ -23,25 +23,25 @@ async function addMaterial(req, res) {
 async function deleteMaterial(req, res) {
     let material = await controllers.Material.getOne(req.params.id, req.user.userId);
     if (!material) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
     // Only allow users to delete their own materials
-    if (material.userId !== req.user.userId) {
-        res.status(403);
+    if (String(material.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
         return;
     }
 
     material = await controllers.Material.deleteOne(req.params.id);
-    res.status(204);
+    res.status(204).send("");
 }
 
 
 async function getMaterial(req, res) {
     let material = await controllers.Material.getOne(req.params.id. req.user.userId);
     if (!material) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
@@ -50,7 +50,7 @@ async function getMaterial(req, res) {
 
 
 async function getMaterials(req, res) {
-    let materials = await controllers.Material.getMany(null, req.user.userId, req.query.orderBy);
+    let materials = await controllers.Material.getMany(null, req.user.userId);
     res.json(materials);
 }
 
@@ -58,13 +58,13 @@ async function getMaterials(req, res) {
 async function updateMaterial(req, res) {
     let material = await controllers.Material.getOne(req.params.id, req.user.userId);
     if (!material) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
     // Only allow users to edit their own materials
-    if (material.userId !== req.user.userId) {
-        res.status(403);
+    if (String(material.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
         return;
     }
 

@@ -24,11 +24,19 @@ async function deleteOne (inventoryId) {
 
 
 async function getOne (inventoryId, userId) {
+    if (String(inventoryId).length != 24) {
+        return null;
+    }
+
     let query = {
 	_id: inventoryId,
     };
 
     if (userId) {
+        if (String(userId).length != 24) {
+            return null;
+        }
+
 	query.userId = userId;
     }
 
@@ -38,20 +46,17 @@ async function getOne (inventoryId, userId) {
 	return null;
     }
 
-    return result;
+    return result[0];
 }
 
 
-async function getMany (unused, userId, orderBy) {
+async function getMany (unused, userId) {
     let query = {};
     if (userId) {
         query = { userId: userId };
     }
 
-    // TODO: handle orderBy
-    let sort = {};
-
-    let result = await db.Inventory.find(query).sort(sort).exec();
+    let result = await db.Inventory.find(query).exec();
     return result;
 }
 

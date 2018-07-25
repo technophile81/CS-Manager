@@ -23,25 +23,25 @@ async function createProject(req, res) {
 async function deleteProject(req, res) {
     let project = await controllers.Project.getOne(req.params.id, req.user.userId);
     if (!project) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
     // Only allow users to delete their own projects
-    if (project.userId !== req.user.userId) {
-        res.status(403);
+    if (String(project.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
         return;
     }
 
     project = await controllers.Project.deleteOne(req.params.id);
-    res.status(204);
+    res.status(204).send("");
 }
 
 
 async function getProject(req, res) {
     let project = await controllers.Project.getOne(req.params.id. req.user.userId);
     if (!project) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
@@ -50,7 +50,7 @@ async function getProject(req, res) {
 
 
 async function getProjects(req, res) {
-    let projects = await controllers.Project.getMany(null, req.user.userId, req.query.orderBy);
+    let projects = await controllers.Project.getMany(null, req.user.userId);
     res.json(projects);
 }
 
@@ -58,13 +58,13 @@ async function getProjects(req, res) {
 async function updateProject(req, res) {
     let project = await controllers.Project.getOne(req.params.id, req.user.userId);
     if (!project) {
-        res.status(404);
+        res.status(404).send("");
         return;
     }
 
     // Only allow users to edit their own projects
-    if (project.userId !== req.user.userId) {
-        res.status(403);
+    if (String(project.userId) !== String(req.user.userId)) {
+        res.status(403).send("");
         return;
     }
 

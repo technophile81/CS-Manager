@@ -24,11 +24,19 @@ async function deleteOne (materialId) {
 
 
 async function getOne (materialId, userId) {
+    if (String(materialId).length != 24) {
+        return null;
+    }
+
     let query = {
 	_id: materialId,
     };
 
     if (userId) {
+        if (String(userId).length != 24) {
+            return null;
+        }
+
 	query.userId = userId;
     }
 
@@ -38,20 +46,17 @@ async function getOne (materialId, userId) {
 	return null;
     }
 
-    return result;
+    return result[0];
 }
 
 
-async function getMany (unused, userId, orderBy) {
+async function getMany (unused, userId) {
     let query = {};
     if (userId) {
 	query = { '$or' : [ { userId: null }, { userId: userId } ] };
     }
 
-    // TODO: handle orderBy
-    let sort = { materialHSL : 1 };
-
-    let result = await db.Material.find(query).sort(sort).exec();
+    let result = await db.Material.find(query).exec();
     return result;
 }
 
