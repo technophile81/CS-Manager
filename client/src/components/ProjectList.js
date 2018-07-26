@@ -26,17 +26,20 @@ class ProjectListElement extends React.Component {
 }
 
 class ProjectListInterior extends React.Component {
+    createNewProject = (e) => {
+        e.preventDefault();
+        this.props.history.push("/createProject");
+    };
+
   componentWillMount() {
     if (!this.props.context.projectsLoaded) {
       this.props.context.updateProjects();
     }
-  }
+  };
 
     render() {
         return (
             <div>
-                <div>
-                </div>
                 <div>
                     <ul>
                         {
@@ -45,8 +48,12 @@ class ProjectListInterior extends React.Component {
                             ))
                         }
                     </ul>
-                    <Link to="/createProject">Create New Project</Link>
                 </div>
+        <ul className="nav nav-pills flex-md-row mb-2 justify-content-around">
+          <li className="nav-item">
+            <button className="btn btn-success nav-link mb-sm-3 mb-md-0" onClick={this.createNewProject}>Create New Project</button>
+          </li>
+        </ul>
             </div>
         )
     }
@@ -60,6 +67,7 @@ class ProjectList extends React.Component {
           return (
             <ProjectListInterior
               context={context}
+              history={this.props.history}
               projectsKeys={context.projectsKeys}
               projects={context.projects}
             />
