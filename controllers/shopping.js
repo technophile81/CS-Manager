@@ -2,6 +2,32 @@ const db = require("../models");
 const projectController = require("./project");
 
 
+async function commitShopping (userId) {
+    const basket = await getBasket(userId);
+    const wishlist = await getWishlist(userId);
+
+    for (let materialId of Object.keys(basket)) {
+        let quantity = basket[materialId];
+
+        for (let i = 0; i < quantity; i++) {
+            const inventory = new db.Inventory({
+                materialId,
+                userId,
+            });
+
+            await inventory.save();
+        }
+
+        if (wishlist[materialId] !== undefined) {
+            await updateWishlistQuantity(userId, materialId, wishlist[materialId] - quantity);
+        }
+    }
+
+    await db.Shopping.remove({ userId: userId });
+    return {};
+}
+
+
 async function getBasket (userId) {
     const shopping = await db.Shopping.find({ userId: userId }).exec();
     let result = {};
@@ -124,6 +150,7 @@ async function updateWishlistQuantity (userId, materialId, quantity) {
 
 
 module.exports = {
+    commitShopping,
     getBasket,
     getNeeds,
     getWishlist,

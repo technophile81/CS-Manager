@@ -6,6 +6,8 @@ import './App.css';
 
 import AppContext from './components/AppContext';
 
+import NavBar from './components/NavBar';
+
 import Inventory from './components/Inventory';
 import MaterialList from './components/MaterialList';
 import MaterialPicker from './components/MaterialPicker';
@@ -19,7 +21,7 @@ class App extends React.Component {
         super(props);
 
         this.allocateProjectMaterials = (projectId, allocation) => {
-            axios.post("/api/project/" + projectId + "/materials", allocation).then((res) => {
+            axios.post("/api/projects/" + projectId + "/materials", allocation).then((res) => {
                 this.updateProjectRequirements(projectId);
             });
         };
@@ -259,6 +261,8 @@ class App extends React.Component {
     render() {
         return (
             <AppContext.Provider value={this.state}>
+                <NavBar />
+
                 <Route path="/inventory" component={Inventory} />
                 <Route path="/materialPicker/:id" component={MaterialPicker} />
                 <Route path="/materials" component={MaterialList} />

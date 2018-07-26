@@ -8,7 +8,9 @@ let safeHandler = require("../utils/safeHandler");
 
 
 async function commitShopping(req, res) {
-    // TODO
+    await controllers.Shopping.commitShopping(req.user._id);
+
+    getShopping(req, res);
 }
 
 
