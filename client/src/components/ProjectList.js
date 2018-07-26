@@ -1,14 +1,17 @@
 import React from "react"
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
-import Navbar from "./Navbar";
-import SideBar from "./Sidebar";
 import "./ProjectList.css";
 
 import AppContext from './AppContext';
 
 
 class ProjectListElement extends React.Component {
+    onClickDelete = (e) => {
+        e.preventDefault();
+        this.props.deleteProject(this.props.project._id);
+    };
+
     render() {
         const linkPath = "/project/" + this.props.project._id;
 
@@ -17,7 +20,7 @@ class ProjectListElement extends React.Component {
                 <img src={this.props.project.photoUrl} alt={this.props.project.name} />
                 <Link to={linkPath}>{this.props.project.name}</Link>
                 <span>{this.props.project.percentComplete}%</span>
-                <Button color="danger">Delete</Button>
+                <Button color="danger" onClick={this.onClickDelete}>Delete</Button>
             </li>
         );
     }
@@ -36,17 +39,14 @@ class ProjectListInterior extends React.Component {
                 <div>
                 </div>
                 <div>
-                <Navbar fluid={true}>
-                Nav test
-                </Navbar>
-<SideBar />
                     <ul>
                         {
                             this.props.projectsKeys.map((projectKey) => (
-                                <ProjectListElement key={projectKey} project={this.props.projects[projectKey]} />
+                                <ProjectListElement key={projectKey} project={this.props.projects[projectKey]} deleteProject={this.props.context.deleteProject} />
                             ))
                         }
                     </ul>
+                    <Link to="/createProject">Create New Project</Link>
                 </div>
             </div>
         )

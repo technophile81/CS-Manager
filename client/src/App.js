@@ -241,6 +241,7 @@ class App extends React.Component {
             allocateProjectMaterials: this.allocateProjectMaterials,
             commitBasket: this.commitBasket,
             createProject: this.createProject,
+            deleteProject: this.deleteProject,
             modifyBasket: this.modifyBasket,
             modifyProject: this.modifyProject,
             modifyProjectMaterialRequirement: this.modifyProjectMaterialRequirement,
