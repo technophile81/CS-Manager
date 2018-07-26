@@ -1,11 +1,20 @@
 import React from "react"
-import { Link } from "react-router-dom";
 
 import AppContext from './AppContext';
 import MaterialList from './MaterialList';
 
 
 class ShoppingInterior extends React.Component {
+    addToBasket = (e) => {
+        e.preventDefault();
+        this.props.history.push("/materialPicker/basket");
+    };
+
+    addToWishlist = (e) => {
+        e.preventDefault();
+        this.props.history.push("/materialPicker/wishlist");
+    };
+
     commitBasket = (e) => {
         e.preventDefault();
         this.props.context.commitBasket();
@@ -82,8 +91,15 @@ class ShoppingInterior extends React.Component {
                     <h3>Shopping Basket</h3>
                     <h5>+/- Add/Subtract Amount in Basket</h5>
                     <MaterialList quantities={shopping.basket} quantityCallbacks={basketCallbacks} />
-                    <Link to="/materialPicker/basket">Add material to basket</Link>
-                    <button onClick={this.commitBasket}>Commit Shopping Basket to Inventory</button>
+
+        <ul className="nav nav-pills flex-md-row mb-2 justify-content-around">
+          <li className="nav-item">
+            <button className="btn btn-success nav-link mb-sm-3 mb-md-0" onClick={this.addToBasket}>Add Material to Basket</button>
+          </li>
+          <li className="nav-item">
+            <button className="btn btn-info nav-link mb-sm-3 mb-md-0" onClick={this.commitBasket}>Commit Basket to Inventory</button>
+          </li>
+        </ul>
                 </div>
                 <div className="shoppingNeeded">
                     <h3>Needed Materials from Active Projects and Wishlist</h3>
@@ -95,7 +111,12 @@ class ShoppingInterior extends React.Component {
                     <h3>Wishlist</h3>
                     <h5>+/- Add/Subtract Amount on Wishlist</h5>
                     <MaterialList quantities={shopping.wishlist} quantityCallbacks={wishlistCallbacks} />
-                    <Link to="/materialPicker/wishlist">Add material to wishlist</Link>
+
+        <ul className="nav nav-pills flex-md-row mb-2 justify-content-around">
+          <li className="nav-item">
+            <button className="btn btn-success nav-link mb-sm-3 mb-md-0" onClick={this.addToWishlist}>Add Material to Wishlist</button>
+          </li>
+        </ul>
                 </div>
             </div>
         )
@@ -110,6 +131,7 @@ class Shopping extends React.Component {
                     (context) => {
                         return <ShoppingInterior
                             context={context}
+                            history={this.props.history}
                             />
                     }
                 }
