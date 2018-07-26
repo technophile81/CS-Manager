@@ -50,7 +50,13 @@ async function getMaterial(req, res) {
 
 
 async function getMaterials(req, res) {
-    let materials = await controllers.Material.getMany(null, req.user._id);
+    let materialsList = await controllers.Material.getMany(null, req.user._id);
+    let materials = {};
+
+    for (let material of materialsList) {
+        materials[material._id] = material;
+    }
+
     res.json(materials);
 }
 

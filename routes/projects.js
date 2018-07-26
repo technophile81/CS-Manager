@@ -48,7 +48,13 @@ async function getProject(req, res) {
 
 
 async function getProjects(req, res) {
-    let projects = await controllers.Project.getMany(null, req.user._id);
+    let projectsList = await controllers.Project.getMany(null, req.user._id);
+    let projects = {};
+
+    for (let project of projectsList) {
+        projects[project._id] = project;
+    }
+
     res.json(projects);
 }
 

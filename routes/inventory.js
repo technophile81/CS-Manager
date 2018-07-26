@@ -27,7 +27,7 @@ async function deleteInventory(req, res) {
         return;
     }
 
-    // Only allow users to delete their own inventorys
+    // Only allow users to delete their own inventory
     if (String(inventory.userId) !== String(req.user._id)) {
         res.status(403).send("");
         return;
@@ -39,8 +39,8 @@ async function deleteInventory(req, res) {
 
 
 async function getAllInventory(req, res) {
-    let inventorys = await controllers.Inventory.getMany(null, req.user._id);
-    res.json(inventorys);
+    let inventory = await controllers.Inventory.getMany(null, req.user._id);
+    res.json(inventory);
 }
 
 

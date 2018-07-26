@@ -31,7 +31,7 @@ class Register extends React.Component {
 
         axios.post('/api/register', { name, email, password })
             .then((result) => {
-                this.props.history.push("/login")
+                this.props.history.push("/login");
             });
     };
 

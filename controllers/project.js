@@ -161,7 +161,7 @@ async function getMany (unused, userId) {
         query = { userId: userId };
     }
 
-    const result = await db.Project.find(query).sort({ name: 1 }).exec();
+    const result = await db.Project.find(query).exec();
     return result;
 }
 

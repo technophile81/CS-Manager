@@ -6,9 +6,11 @@ import AppContext from './AppContext';
 
 class ProjectListElement extends React.Component {
     render() {
+        const linkPath = "/project/" + this.props.project._id;
+
         return (
             <li>
-                <Link to="/project/{this.props.project._id}">{this.props.project.name}</Link>
+                <Link to={linkPath}>{this.props.project.name}</Link>
             </li>
         );
     }
@@ -23,8 +25,8 @@ class ProjectListInterior extends React.Component {
                 <div>
                     <ul>
                         {
-                            this.props.projects.map((project) => (
-                                <ProjectListElement key={project._id} project={project} />
+                            this.props.projectsKeys.map((projectKey) => (
+                                <ProjectListElement key={projectKey} project={this.props.projects[projectKey]} />
                             ))
                         }
                     </ul>
@@ -45,6 +47,7 @@ class ProjectList extends React.Component {
                         }
 
                         return <ProjectListInterior
+                            projectsKeys={context.projectsKeys}
                             projects={context.projects}
                             />
                     }

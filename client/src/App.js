@@ -12,6 +12,7 @@ import Register from './components/Register';
 
 // import InventoryList from './components/InventoryList';
 import MaterialList from './components/MaterialList';
+import Project from './components/Project';
 import ProjectList from './components/ProjectList';
 // import Shopping from './components/Shopping';
 // import UserProfile from './components/UserProfile';
@@ -20,30 +21,62 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        this.sortMaterialsByHue = () => {
-            let materials = this.state.materials.slice();
+        this.sortMaterialsByHue = (materials) => {
+            console.log(materials);
+            if (!materials) {
+                materials = this.state.materials.slice();
+            }
+            console.log(materials);
+            let materialsKeys = Object.keys(materials);
 
-            materials.sort(function(a, b) {
+            materialsKeys.sort(function(aKey, bKey) {
+                let a = this.state.materials[aKey];
+                let b = this.state.materials[bKey];
+
                 let aHue = (a.hue * 1000000) + (a.saturation * 1000) + a.lightness;
                 let bHue = (b.hue * 1000000) + (b.saturation * 1000) + b.lightness;
 
                 return (aHue - bHue);
             });
 
-            this.setState({ materials });
+            this.setState({
+                materials: materials,
+                materialsKeys: materialsKeys,
+                materialsSort: 'hue',
+            });
         };
 
-        this.sortMaterialsByName = () => {
-            let materials = this.state.materials.slice();
-            materials.sort(function(a, b) { return a.name.localeCompare(b.name); });
-            this.setState({ materials });
+        this.sortMaterialsByName = (materials) => {
+            if (!materials) {
+                materials = this.state.materials.slice();
+            }
+            let materialsKeys = Object.keys(materials);
+
+            materialsKeys.sort(function(aKey, bKey) {
+                let a = this.state.materials[aKey];
+                let b = this.state.materials[bKey];
+
+                return a.name.localeCompare(b.name);
+            });
+
+            this.setState({
+                materials: materials,
+                materialsKeys: materialsKeys,
+                materialsSort: 'name',
+            });
         };
 
-        this.sortMaterialsBySKU = () => {
-            let materials = this.state.materials.slice();
+        this.sortMaterialsBySKU = (materials) => {
+            if (!materials) {
+                materials = this.state.materials.slice();
+            }
+            let materialsKeys = Object.keys(materials);
 
             // Try to find the first set of numbers in each SKU and compare them
-            materials.sort(function(a, b) {
+            materialsKeys.sort(function(aKey, bKey) {
+                let a = this.state.materials[aKey];
+                let b = this.state.materials[bKey];
+
                 let allRegex = /^\d+$/;
 
                 let aAll = allRegex.exec(a.sku) !== null;
@@ -64,7 +97,11 @@ class App extends React.Component {
                 return a.sku.localeCompare(b.sku);
             });
 
-            this.setState({ materials });
+            this.setState({
+                materials: materials,
+                materialsKeys: materialsKeys,
+                materialsSort: 'sku',
+            });
         };
 
         this.updateInventory = () => {
@@ -75,7 +112,13 @@ class App extends React.Component {
             this.setState({ materialsLoaded: true });
 
             axios.get("/api/materials").then((res) => {
-                this.setState({ materials: res.data });
+                if (this.state.materialsSort == 'name') {
+                    this.sortMaterialsByName(res.data);
+                } else if (this.state.materialsSort == 'sku') {
+                    this.sortMaterialsBySKU(res.data);
+                } else {
+                    this.sortMaterialsByHue(res.data);
+                }
             })
         };
 
@@ -83,14 +126,30 @@ class App extends React.Component {
             this.setState({ projectsLoaded: true });
 
             axios.get("/api/projects").then((res) => {
-                this.setState({ projects: res.data });
+                let projects = res.data;
+                let projectsKeys = Object.keys(projects);
+
+                projectsKeys.sort(function (aKey, bKey) {
+                    let a = projects[aKey];
+                    let b = projects[bKey];
+
+                    return a.name.localeCompare(b.name);
+                });
+
+                this.setState({
+                    projects: projects,
+                    projectsKeys: projectsKeys,
+                });
             })
         };
 
         this.state = {
             inventory: [],
-            materials: [],
-            projects: [],
+            materials: {},
+            materialsKeys: [],
+            materialsSort: 'hue',
+            projects: {},
+            projectsKeys: [],
 
             inventoryLoaded: false,
             materialsLoaded: false,
@@ -121,6 +180,7 @@ class App extends React.Component {
 
                         <Route path="/materials" component={MaterialList} />
                         <Route path="/projects" component={ProjectList} />
+                        <Route path="/project/:id" component={Project} />
                     </div>
                 </Router>
             </AppContext.Provider>

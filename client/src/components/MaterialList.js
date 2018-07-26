@@ -35,8 +35,8 @@ class MaterialListInterior extends React.Component {
                 <div>
                     <ul>
                         {
-                            this.props.materials.map((material) => (
-                                <MaterialListElement key={material._id} material={material} />
+                            this.props.materialsKeys.map((materialKey) => (
+                                <MaterialListElement key={materialKey} material={this.props.materials[materialKey]} />
                             ))
                         }
                     </ul>
@@ -57,6 +57,7 @@ class MaterialList extends React.Component {
                         }
 
                         return <MaterialListInterior
+                            materialsKeys={context.materialsKeys}
                             materials={context.materials}
                             sortHue={context.sortMaterialsByHue}
                             sortName={context.sortMaterialsByName}
