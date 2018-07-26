@@ -39,7 +39,12 @@ async function deleteInventory(req, res) {
 
 
 async function getAllInventory(req, res) {
-    let inventory = await controllers.Inventory.getMany(null, req.user._id);
+    let inventoryList = await controllers.Inventory.getMany(null, req.user._id);
+    let inventory = {};
+
+    for (let item of inventoryList) {
+        inventory[item._id] = item;
+    }
     res.json(inventory);
 }
 

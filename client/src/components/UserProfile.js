@@ -1,7 +1,9 @@
 import React from "react"
 
+import AppContext from './AppContext';
 
-class Home extends React.Component {
+
+class UserProfile extends React.Component {
     render() {
         return (
             <div>
@@ -11,4 +13,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default UserProfile;

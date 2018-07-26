@@ -6,13 +6,13 @@ import './App.css';
 
 import AppContext from './components/AppContext';
 
-// import InventoryList from './components/InventoryList';
+import Inventory from './components/Inventory';
 import MaterialList from './components/MaterialList';
 import MaterialPicker from './components/MaterialPicker';
 import Project from './components/Project';
 import ProjectList from './components/ProjectList';
 import Shopping from './components/Shopping';
-// import UserProfile from './components/UserProfile';
+import UserProfile from './components/UserProfile';
 
 class App extends React.Component {
     constructor(props) {
@@ -152,6 +152,10 @@ class App extends React.Component {
 
         this.updateInventory = () => {
             this.setState({ inventoryLoaded: true });
+
+            axios.get("/api/inventory").then((res) => {
+                this.setState({ inventory: res.data });
+            });
         };
 
         this.updateMaterials = () => {
@@ -255,20 +259,17 @@ class App extends React.Component {
     render() {
         return (
             <AppContext.Provider value={this.state}>
-                <Route path="/materials" component={MaterialList} />
+                <Route path="/inventory" component={Inventory} />
                 <Route path="/materialPicker/:id" component={MaterialPicker} />
-                <Route path="/projects" component={ProjectList} />
+                <Route path="/materials" component={MaterialList} />
+                <Route path="/profile" component={UserProfile} />
                 <Route path="/project/:id" component={Project} />
+                <Route path="/projects" component={ProjectList} />
                 <Route path="/shopping" component={Shopping} />
             </AppContext.Provider>
         );
     };
 }
 
-/*
-
-                    <Route path="/inventory" component={InventoryList} />
-                    <Route path="/profile" component={UserProfile} />
-                    */
 
 export default App;
