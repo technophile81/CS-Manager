@@ -6,6 +6,11 @@ import MaterialList from './MaterialList';
 
 
 class ProjectDisplay extends React.Component {
+    allocateMaterials = (e) => {
+        e.preventDefault();
+        // TODO
+    };
+
     decrementRequirement = (material) => {
         let requirements = this.props.requirements.totalRequired || {};
 
@@ -50,11 +55,13 @@ class ProjectDisplay extends React.Component {
 
         return (
             <div>
-                <h1>
-                    {project.name}
-                </h1>
+                <h1>{project.name}</h1>
+                <h3>Material Requirements</h3>
+                <h5>Allocated/Total Required</h5>
+                <h5>+/- Add/Subtract Required Materials</h5>
                 <MaterialList quantities={quantities} quantityCallbacks={requirementCallbacks} />
                 <Link to={pickerPath}>Add new material requirement</Link>
+                <button onClick={this.allocateMaterials}>Allocate Available Materials from Inventory</button>
             </div>
         )
     }

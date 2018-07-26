@@ -6,6 +6,11 @@ import MaterialList from './MaterialList';
 
 
 class ShoppingInterior extends React.Component {
+    commitBasket = (e) => {
+        e.preventDefault();
+        this.props.context.commitBasket();
+    };
+
     decrementBasket = (material) => {
         let shopping = this.props.context.shopping;
 
@@ -72,17 +77,23 @@ class ShoppingInterior extends React.Component {
 
         return (
             <div>
+                <h1>Shopping</h1>
                 <div className="shoppingBasket">
-                    <h1>Shopping Basket</h1>
+                    <h3>Shopping Basket</h3>
+                    <h5>+/- Add/Subtract Amount in Basket</h5>
                     <MaterialList quantities={shopping.basket} quantityCallbacks={basketCallbacks} />
                     <Link to="/materialPicker/basket">Add material to basket</Link>
+                    <button onClick={this.commitBasket}>Commit Shopping Basket to Inventory</button>
                 </div>
                 <div className="shoppingNeeded">
-                    <h1>Needed Materials from Projects and Wishlist</h1>
+                    <h3>Needed Materials from Active Projects and Wishlist</h3>
+                    <h5>Amount in Basket / Total Needed</h5>
+                    <h5>+/- Add/Subtract Amount in Basket</h5>
                     <MaterialList quantities={neededMaterials} quantityCallbacks={basketCallbacks} />
                 </div>
                 <div className="shoppingWishlist">
-                    <h1>Wishlist</h1>
+                    <h3>Wishlist</h3>
+                    <h5>+/- Add/Subtract Amount on Wishlist</h5>
                     <MaterialList quantities={shopping.wishlist} quantityCallbacks={wishlistCallbacks} />
                     <Link to="/materialPicker/wishlist">Add material to wishlist</Link>
                 </div>

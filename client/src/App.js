@@ -22,6 +22,12 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
+        this.allocateProjectMaterials = (projectId, allocation) => {
+            axios.post("/api/project/" + projectId + "/materials", allocation).then((res) => {
+                this.updateProjectRequirements(projectId);
+            });
+        };
+
         this.commitBasket = () => {
             axios.post("/api/shopping", {}).then((res) => {
                 this.updateShopping();
@@ -40,6 +46,12 @@ class App extends React.Component {
                 shopping.basket = res.data;
 
                 this.setState({ shopping });
+            });
+        };
+
+        this.modifyProject = (project) => {
+            axios.put("/api/projects/" + project._id, project).then((res) => {
+                this.updateProjects();
             });
         };
 
@@ -213,9 +225,11 @@ class App extends React.Component {
             projectsLoaded: false,
             shoppingLoaded: false,
 
+            allocateProjectMaterials: this.allocateProjectMaterials,
             commitBasket: this.commitBasket,
             createProject: this.createProject,
             modifyBasket: this.modifyBasket,
+            modifyProject: this.modifyProject,
             modifyProjectMaterialRequirement: this.modifyProjectMaterialRequirement,
             modifyWishlist: this.modifyWishlist,
 
