@@ -3,7 +3,13 @@ let db = require("../models");
 let jwt = require("jsonwebtoken");
 
 let router = express.Router();
+let isAuthenticated = require("../utils/isAuthenticated");
 let safeHandler = require("../utils/safeHandler");
+
+
+async function authCheck(req, res) {
+    return res.json({ success: true, userId: req.user._id });
+}
 
 
 async function authLogin(req, res) {
@@ -77,6 +83,7 @@ async function authRegister(req, res) {
 
 
 if (process.env.JWT_SECRET) {
+    router.get("/api/authed", isAuthenticated, safeHandler(authCheck));
     router.post("/api/login", safeHandler(authLogin));
     router.post("/api/register", safeHandler(authRegister));
 }

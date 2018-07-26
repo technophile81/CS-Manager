@@ -1,14 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import axios from 'axios';
 
 import './App.css';
 
 import AppContext from './components/AppContext';
-
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
 
 // import InventoryList from './components/InventoryList';
 import MaterialList from './components/MaterialList';
@@ -245,26 +241,25 @@ class App extends React.Component {
         };
     };
 
-    componentDidMount() {
+    componentWillMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        axios.get('/api/authed').then((res) => {
+            // do nothing
+        }).catch((err) => {
+            if (err.response && err.response.status === 401) {
+                this.props.history.push("/login");
+            }
+        });
     };
 
     render() {
         return (
             <AppContext.Provider value={this.state}>
-                <Router>
-                    <div>
-                        <Route exact path="/" component={Home} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/register" component={Register} />
-
-                        <Route path="/materials" component={MaterialList} />
-                        <Route path="/materialPicker/:id" component={MaterialPicker} />
-                        <Route path="/projects" component={ProjectList} />
-                        <Route path="/project/:id" component={Project} />
-                        <Route path="/shopping" component={Shopping} />
-                    </div>
-                </Router>
+                <Route path="/materials" component={MaterialList} />
+                <Route path="/materialPicker/:id" component={MaterialPicker} />
+                <Route path="/projects" component={ProjectList} />
+                <Route path="/project/:id" component={Project} />
+                <Route path="/shopping" component={Shopping} />
             </AppContext.Provider>
         );
     };
