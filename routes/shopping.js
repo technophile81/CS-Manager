@@ -15,8 +15,9 @@ async function commitShopping(req, res) {
 async function getShopping(req, res) {
     const basket = await controllers.Shopping.getBasket(req.user._id);
     const needs = await controllers.Shopping.getNeeds(req.user._id);
+    const wishlist = await controllers.Shopping.getWishlist(req.user._id);
 
-    const shopping = { basket, needs };
+    const shopping = { basket, needs, wishlist };
     res.json(shopping);
 }
 

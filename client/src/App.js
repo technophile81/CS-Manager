@@ -21,6 +21,36 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
+        this.commitBasket = () => {
+            axios.post("/api/shopping", {}).then((res) => {
+                this.updateShopping();
+            });
+        };
+
+        this.createProject = (project) => {
+            axios.post("/api/projects", project).then((res) => {
+                this.updateProjects();
+            });
+        };
+
+        this.modifyBasket = (materialId, quantity) => {
+            axios.put("/api/shopping/basket/" + materialId, { quantity }).then((res) => {
+                this.updateShopping();
+            });
+        };
+
+        this.modifyProject = (project) => {
+            axios.put("/api/projects/" + project._id, project).then((res) => {
+                this.updateProjects();
+            });
+        };
+
+        this.modifyWishlist = (materialId, quantity) => {
+            axios.put("/api/shopping/wishlist/" + materialId, { quantity }).then((res) => {
+                this.updateShopping();
+            });
+        };
+
         this.sortMaterialsByHue = (materials) => {
             if (!materials) {
                 materials = this.state.materials;
