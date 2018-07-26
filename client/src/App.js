@@ -12,6 +12,7 @@ import Inventory from './components/Inventory';
 import MaterialList from './components/MaterialList';
 import MaterialPicker from './components/MaterialPicker';
 import Project from './components/Project';
+import ProjectForm from './components/ProjectForm';
 import ProjectList from './components/ProjectList';
 import Shopping from './components/Shopping';
 import UserProfile from './components/UserProfile';
@@ -34,6 +35,12 @@ class App extends React.Component {
 
         this.createProject = (project) => {
             axios.post("/api/projects", project).then((res) => {
+                this.updateProjects();
+            });
+        };
+
+        this.deleteProject = (projectId) => {
+            axios.delete("/api/projects/" + projectId).then((res) => {
                 this.updateProjects();
             });
         };
@@ -174,7 +181,7 @@ class App extends React.Component {
             });
         };
 
-        this.updateProjects = () => {
+        this.updateProjects = (cb) => {
             this.setState({ projectsLoaded: true });
 
             axios.get("/api/projects").then((res) => {
@@ -192,6 +199,10 @@ class App extends React.Component {
                     projects: projects,
                     projectsKeys: projectsKeys,
                 });
+
+                if (cb) {
+                    cb();
+                }
             });
         };
 
@@ -263,6 +274,7 @@ class App extends React.Component {
             <AppContext.Provider value={this.state}>
                 <NavBar />
 
+                <Route path="/createProject" component={ProjectForm} />
                 <Route path="/inventory" component={Inventory} />
                 <Route path="/materialPicker/:id" component={MaterialPicker} />
                 <Route path="/materials" component={MaterialList} />
