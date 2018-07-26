@@ -8,7 +8,9 @@ import MaterialList from './MaterialList';
 class ProjectDisplay extends React.Component {
     allocateMaterials = (e) => {
         e.preventDefault();
-        // TODO
+
+        let allocation = this.props.requirements.shouldAllocateFromInventory || {};
+        this.props.context.allocateProjectMaterials(this.props.project._id, allocation);
     };
 
     decrementRequirement = (material) => {
