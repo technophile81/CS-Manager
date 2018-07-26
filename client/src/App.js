@@ -22,16 +22,14 @@ class App extends React.Component {
         super(props);
 
         this.sortMaterialsByHue = (materials) => {
-            console.log(materials);
             if (!materials) {
-                materials = this.state.materials.slice();
+                materials = this.state.materials;
             }
-            console.log(materials);
             let materialsKeys = Object.keys(materials);
 
             materialsKeys.sort(function(aKey, bKey) {
-                let a = this.state.materials[aKey];
-                let b = this.state.materials[bKey];
+                let a = materials[aKey];
+                let b = materials[bKey];
 
                 let aHue = (a.hue * 1000000) + (a.saturation * 1000) + a.lightness;
                 let bHue = (b.hue * 1000000) + (b.saturation * 1000) + b.lightness;
@@ -48,13 +46,13 @@ class App extends React.Component {
 
         this.sortMaterialsByName = (materials) => {
             if (!materials) {
-                materials = this.state.materials.slice();
+                materials = this.state.materials;
             }
             let materialsKeys = Object.keys(materials);
 
             materialsKeys.sort(function(aKey, bKey) {
-                let a = this.state.materials[aKey];
-                let b = this.state.materials[bKey];
+                let a = materials[aKey];
+                let b = materials[bKey];
 
                 return a.name.localeCompare(b.name);
             });
@@ -68,14 +66,14 @@ class App extends React.Component {
 
         this.sortMaterialsBySKU = (materials) => {
             if (!materials) {
-                materials = this.state.materials.slice();
+                materials = this.state.materials;
             }
             let materialsKeys = Object.keys(materials);
 
             // Try to find the first set of numbers in each SKU and compare them
             materialsKeys.sort(function(aKey, bKey) {
-                let a = this.state.materials[aKey];
-                let b = this.state.materials[bKey];
+                let a = materials[aKey];
+                let b = materials[bKey];
 
                 let allRegex = /^\d+$/;
 
@@ -112,9 +110,9 @@ class App extends React.Component {
             this.setState({ materialsLoaded: true });
 
             axios.get("/api/materials").then((res) => {
-                if (this.state.materialsSort == 'name') {
+                if (this.state.materialsSort === 'name') {
                     this.sortMaterialsByName(res.data);
-                } else if (this.state.materialsSort == 'sku') {
+                } else if (this.state.materialsSort === 'sku') {
                     this.sortMaterialsBySKU(res.data);
                 } else {
                     this.sortMaterialsByHue(res.data);

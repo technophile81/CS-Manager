@@ -24,13 +24,28 @@ class MaterialListElement extends React.Component {
 }
 
 class MaterialListInterior extends React.Component {
+    sortHue = (e) => {
+        e.preventDefault();
+        this.props.sortHue();
+    };
+
+    sortName = (e) => {
+        e.preventDefault();
+        this.props.sortName();
+    };
+
+    sortSKU = (e) => {
+        e.preventDefault();
+        this.props.sortSKU();
+    };
+
     render() {
         return (
             <div>
                 <div>
-                    <button onClick={this.props.sortHue}>Hue</button>
-                    <button onClick={this.props.sortName}>Name</button>
-                    <button onClick={this.props.sortSKU}>SKU</button>
+                    <button onClick={this.sortHue}>Hue</button>
+                    <button onClick={this.sortName}>Name</button>
+                    <button onClick={this.sortSKU}>SKU</button>
                 </div>
                 <div>
                     <ul>
