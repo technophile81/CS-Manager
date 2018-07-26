@@ -24,10 +24,9 @@ class Project extends React.Component {
             <AppContext.Consumer>
                 {
                     (context) => {
-                        for (let project of context.projects) {
-                            if (project._id == params.id) {
-                                return <ProjectDisplay context={context} project={project} />
-                            }
+                        let project = context.projects[params.id];
+                        if (project) {
+                            return <ProjectDisplay context={context} project={project} />
                         }
 
                         return <div>Project not found</div>
