@@ -6,6 +6,11 @@ import MaterialList from './MaterialList';
 
 
 class ProjectDisplay extends React.Component {
+    addMaterialRequirement = (e) => {
+        e.preventDefault();
+        this.props.history.push("/materialPicker/" + this.props.project._id);
+    };
+
     allocateMaterials = (e) => {
         e.preventDefault();
 
@@ -53,8 +58,6 @@ class ProjectDisplay extends React.Component {
             increment: this.incrementRequirement,
         };
 
-        const pickerPath = "/materialPicker/" + project._id;
-
         return (
             <div>
                 <h1>{project.name}</h1>
@@ -62,8 +65,15 @@ class ProjectDisplay extends React.Component {
                 <h5>Allocated/Total Required</h5>
                 <h5>+/- Add/Subtract Required Materials</h5>
                 <MaterialList quantities={quantities} quantityCallbacks={requirementCallbacks} />
-                <Link to={pickerPath}>Add new material requirement</Link>
-                <button onClick={this.allocateMaterials}>Allocate Available Materials from Inventory</button>
+
+        <ul className="nav nav-pills flex-md-row mb-2 justify-content-around">
+          <li className="nav-item">
+            <button className="btn btn-success nav-link mb-sm-3 mb-md-0" onClick={this.addMaterialRequirement}>Add New Requirement</button>
+          </li>
+          <li className="nav-item">
+            <button className="btn btn-info nav-link mb-sm-3 mb-md-0" onClick={this.allocateMaterials}>Allocate Available Materials</button>
+          </li>
+        </ul>
             </div>
         )
     }
@@ -86,7 +96,7 @@ class ProjectInterior extends React.Component {
         }
 
         let requirements = this.props.context.projectRequirements[params.id];
-        return <ProjectDisplay context={this.props.context} project={project} requirements={requirements} />
+        return <ProjectDisplay context={this.props.context} history={this.props.history} project={project} requirements={requirements} />
     }
 }
 
@@ -97,7 +107,7 @@ class Project extends React.Component {
             <AppContext.Consumer>
                 {
                     (context) => (
-                        <ProjectInterior context={context} match={this.props.match} />
+                        <ProjectInterior context={context} history={this.props.history} match={this.props.match} />
                     )
                 }
             </AppContext.Consumer>
