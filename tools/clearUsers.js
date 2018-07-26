@@ -26,6 +26,20 @@ async function clearDatabase() {
         userId: db.getInvisibleUserId(),
         name: 'INVISIBLE',
     });
+    await invisProject.save();
+
+    let testUser = new db.User({
+        name: 'Test',
+    });
+    let user = await testUser.save();
+
+    let testCred = new db.Credential({
+        userId: user._id,
+        source: 'local',
+        name: 'test@example.com',
+        secret: 'test',
+    });
+    await testCred.save();
 }
 
 clearDatabase().then(() => {

@@ -8,7 +8,7 @@ let safeHandler = require("../utils/safeHandler");
 
 
 async function addMaterial(req, res) {
-    controllers.Material.createOne(req.body, req.user.userId).then((created) => {
+    controllers.Material.createOne(req.body, req.user._id).then((created) => {
         res.status(201).json(created);
     }).catch((err) => {
         if (err.name == 'ValidationError') {
@@ -21,14 +21,14 @@ async function addMaterial(req, res) {
 
 
 async function deleteMaterial(req, res) {
-    let material = await controllers.Material.getOne(req.params.id, req.user.userId);
+    let material = await controllers.Material.getOne(req.params.id, req.user._id);
     if (!material) {
         res.status(404).send("");
         return;
     }
 
     // Only allow users to delete their own materials
-    if (String(material.userId) !== String(req.user.userId)) {
+    if (String(material.userId) !== String(req.user._id)) {
         res.status(403).send("");
         return;
     }
@@ -39,7 +39,7 @@ async function deleteMaterial(req, res) {
 
 
 async function getMaterial(req, res) {
-    let material = await controllers.Material.getOne(req.params.id. req.user.userId);
+    let material = await controllers.Material.getOne(req.params.id. req.user._id);
     if (!material) {
         res.status(404).send("");
         return;
@@ -50,20 +50,20 @@ async function getMaterial(req, res) {
 
 
 async function getMaterials(req, res) {
-    let materials = await controllers.Material.getMany(null, req.user.userId);
+    let materials = await controllers.Material.getMany(null, req.user._id);
     res.json(materials);
 }
 
 
 async function updateMaterial(req, res) {
-    let material = await controllers.Material.getOne(req.params.id, req.user.userId);
+    let material = await controllers.Material.getOne(req.params.id, req.user._id);
     if (!material) {
         res.status(404).send("");
         return;
     }
 
     // Only allow users to edit their own materials
-    if (String(material.userId) !== String(req.user.userId)) {
+    if (String(material.userId) !== String(req.user._id)) {
         res.status(403).send("");
         return;
     }

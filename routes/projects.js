@@ -8,13 +8,13 @@ let safeHandler = require("../utils/safeHandler");
 
 
 async function checkProject(req, res, next) {
-    const project = await controllers.Project.getOne(req.params.id, req.user.userId);
+    const project = await controllers.Project.getOne(req.params.id, req.user._id);
     if (!project) {
         return res.status(404).send("");
     }
 
     // Only allow users to delete their own projects
-    if (String(project.userId) !== String(req.user.userId)) {
+    if (String(project.userId) !== String(req.user._id)) {
         return res.status(403).send("");
     }
 
@@ -24,7 +24,7 @@ async function checkProject(req, res, next) {
 
 
 async function createProject(req, res) {
-    controllers.Project.createOne(req.body, req.user.userId).then((created) => {
+    controllers.Project.createOne(req.body, req.user._id).then((created) => {
         res.status(201).json(created);
     }).catch((err) => {
         if (err.name == 'ValidationError') {
@@ -48,7 +48,7 @@ async function getProject(req, res) {
 
 
 async function getProjects(req, res) {
-    let projects = await controllers.Project.getMany(null, req.user.userId);
+    let projects = await controllers.Project.getMany(null, req.user._id);
     res.json(projects);
 }
 

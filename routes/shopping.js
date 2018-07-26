@@ -8,8 +8,8 @@ let safeHandler = require("../utils/safeHandler");
 
 
 async function getShopping(req, res) {
-    const basket = await controllers.Shopping.getBasket(req.user.userId);
-    const needs = await controllers.Shopping.getNeeds(req.user.userId);
+    const basket = await controllers.Shopping.getBasket(req.user._id);
+    const needs = await controllers.Shopping.getNeeds(req.user._id);
 
     const shopping = { basket, needs };
     res.json(shopping);
@@ -17,7 +17,7 @@ async function getShopping(req, res) {
 
 
 async function updateBasketQuantity(req, res) {
-    const basket = await controllers.Shopping.updateBasketQuantity(req.user.userId, req.params.id, req.body.quantity);
+    const basket = await controllers.Shopping.updateBasketQuantity(req.user._id, req.params.id, req.body.quantity);
     res.json(basket);
 }
 
