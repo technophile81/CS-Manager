@@ -215,6 +215,11 @@ async function updateNote (projectId, noteId, noteData) {
 
 
 async function updateOne (projectId, data) {
+    delete data._id;
+    delete data.createdAt;
+    delete data.materialRequirements;
+    delete data.notes;
+    delete data.updatedAt;
     delete data.userId;
 
     const result = await db.Project.update({ _id: projectId }, { '$set' : data }).exec();
