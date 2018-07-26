@@ -1,0 +1,39 @@
+h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+}
+
+span {
+    font-size: 1rem;
+    color: #333;
+}
+
+ul {
+    padding-left: 0;
+}
+
+li.materialList {
+    list-style: none;
+    display: block;
+    border-bottom: 1px solid #ccc;
+}
+
+.materialColorBlock {
+    width: 8%;
+    margin-right: 20px;
+}
+
+.materialColorBlock:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .materialColorBlock {
+        width: 15%;
+        margin-right: 20px;
+    }
+}
