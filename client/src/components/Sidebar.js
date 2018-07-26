@@ -1,49 +1,53 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-//import { connect } from 'react-redux';
-import { Collapse } from 'reactstrap';
-//import UserInfo from './UserInfo';
-//import Nav from './Nav';
-//import backgroundImage from 'assets/images/sidebar-5.jpg';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { Nav } from 'reactstrap';
+// javascript plugin used to create scrollbars on windows
+import PerfectScrollbar from 'perfect-scrollbar';
 
-class SideBar extends Component {
+import logo from "../logo.svg";
 
-  state = {};
+var ps;
 
-  render() {
-    let {
-      location,
-    //  backgroundColor,
-     // enableBackgroundImage,
-    //   backgroundImage
-    } = this.props;
-
-    return (
-      <div className="sidebar" /* data-image={backgroundImage} */>
-
-        <div className="brand">
-          <a href="http://jslancer.com" className="brand-name">
-            <img src={'http://jslancer.com/wp-content/uploads/2017/04/js-lancer-logo2-1.png'} alt="logo" className="logo" />
-          </a>
-
-        </div>
-
-        <div className="sidebar-wrapper">
-          {/* <UserInfo /> */}
-          <div className="line"></div>
-         {/*  <Nav /> */}
-        </div>
-        <div
-          className="sidebar-background"
-          /* style={{
-            backgroundImage: enableBackgroundImage ? 'url(' + backgroundImage + ')' : null
-          }} */>
-        </div>
-      </div>
-    )
-  }
+class Sidebar extends React.Component{
+    constructor(props){
+        super(props);
+        this.activeRoute.bind(this);
+    }
+    // verifies if routeName is the one active (in browser input)
+    activeRoute(routeName) {
+        return this.props.location.pathname.indexOf(routeName) > -1 ? 'active' : '';
+    }
+    componentDidMount(){
+        if(navigator.platform.indexOf('Win') > -1){
+            ps = new PerfectScrollbar(this.refs.sidebar,{suppressScrollX: true, suppressScrollY: false});
+        }
+    }
+    componentWillUnmount(){
+        if(navigator.platform.indexOf('Win') > -1){
+            ps.destroy();
+        }
+    }
+    render(){
+        return (
+            <div className="sidebar" data-color="blue">
+                <div className="logo">
+                	<a href="/" className="simple-text logo-mini">
+                        <div className="logo-img">
+                            <img src={logo} alt="react-logo" />
+                        </div>
+                	</a>
+                	<a href="/" className="simple-text logo-normal">
+                		Craftage
+                	</a>
+                </div>
+                <div className="sidebar-wrapper" ref="sidebar">
+                    <Nav>
+                        
+                    </Nav>
+                </div>
+            </div>
+        );
+    }
 }
 
-
-
-export default SideBar;
+export default Sidebar;

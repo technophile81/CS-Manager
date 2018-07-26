@@ -7,6 +7,7 @@ import './App.css';
 import AppContext from './components/AppContext';
 
 import NavBar from './components/NavBar';
+import Sidebar from './components/Sidebar';
 
 import Inventory from './components/Inventory';
 import MaterialList from './components/MaterialList';
@@ -262,6 +263,7 @@ class App extends React.Component {
         return (
             <AppContext.Provider value={this.state}>
                 <NavBar />
+                <Sidebar />
 
                 <Route path="/inventory" component={Inventory} />
                 <Route path="/materialPicker/:id" component={MaterialPicker} />
