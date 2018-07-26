@@ -61,26 +61,35 @@ class ProjectDisplay extends React.Component {
 }
 
 
-class Project extends React.Component {
+class ProjectInterior extends React.Component {
+    componentWillMount() {
+        if (!this.props.context.projectsLoaded) {
+            this.props.context.updateProjects();
+        }
+    }
+
     render() {
         let params = this.props.match.params;
+        let project = this.props.context.projects[params.id];
 
+        if (!project) {
+            return <div>Project not found</div>
+        }
+
+        let requirements = this.props.context.projectRequirements[params.id];
+        return <ProjectDisplay context={this.props.context} project={project} requirements={requirements} />
+    }
+}
+
+
+class Project extends React.Component {
+    render() {
         return (
             <AppContext.Consumer>
                 {
-                    (context) => {
-                        if (!context.projectsLoaded) {
-                            context.updateProjects();
-                        }
-
-                        let project = context.projects[params.id];
-                        if (project) {
-                            let requirements = context.projectRequirements[params.id];
-                            return <ProjectDisplay context={context} project={project} requirements={requirements} />
-                        }
-
-                        return <div>Project not found</div>
-                    }
+                    (context) => (
+                        <ProjectInterior context={context} match={this.props.match} />
+                    )
                 }
             </AppContext.Consumer>
         )
