@@ -191,8 +191,10 @@ async function replaceMaterialRequirement (projectId, materialId, materialQuanti
     }
 
     // NOTE: this method DOES NOT modify material allocations
+    
+    await project.save();
 
-    const result = await project.save();
+    const result = await getMaterialRequirements(projectId);
     return result;
 }
 

@@ -77,7 +77,7 @@ async function updateBasketQuantity (userId, materialId, quantity) {
 
     if (shopping) {
         if (quantity <= 0) {
-            await shopping.remove().exec();
+            await shopping.remove();
         } else {
             shopping.quantity = quantity;
             const result = await shopping.save();
@@ -104,7 +104,7 @@ async function updateWishlistQuantity (userId, materialId, quantity) {
 
     if (wishlist) {
         if (quantity <= 0) {
-            await wishlist.remove().exec();
+            await wishlist.remove();
         } else {
             wishlist.quantity = quantity;
             const result = await wishlist.save();
