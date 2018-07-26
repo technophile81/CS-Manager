@@ -117,7 +117,7 @@ class App extends React.Component {
                 } else {
                     this.sortMaterialsByHue(res.data);
                 }
-            })
+            });
         };
 
         this.updateProjects = () => {
@@ -138,7 +138,15 @@ class App extends React.Component {
                     projects: projects,
                     projectsKeys: projectsKeys,
                 });
-            })
+            });
+        };
+
+        this.updateShopping = () => {
+            this.setState({ shoppingLoaded: true });
+
+            axios.get("/api/shopping").then((res) => {
+                this.setState({ shopping: res.data });
+            });
         };
 
         this.state = {
@@ -152,6 +160,7 @@ class App extends React.Component {
             inventoryLoaded: false,
             materialsLoaded: false,
             projectsLoaded: false,
+            shoppingLoaded: false,
 
             sortMaterialsByHue: this.sortMaterialsByHue,
             sortMaterialsByName: this.sortMaterialsByName,
@@ -160,6 +169,7 @@ class App extends React.Component {
             updateInventory: this.updateInventory,
             updateMaterials: this.updateMaterials,
             updateProjects: this.updateProjects,
+            updateShopping: this.updateShopping,
         };
     };
 

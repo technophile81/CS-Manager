@@ -21,9 +21,11 @@ async function getNeeds (userId) {
     }).exec();
 
     let needs = {
-        materials: {},
         projects: {},
     };
+
+    needs.wishlist = await getWishlist(userId);
+    needs.materials = Object.assign({}, needs.wishlist);
 
     for (let project of projects) {
         let materialRequirements = await projectController.getMaterialRequirements(project._id);
@@ -55,6 +57,18 @@ async function getNeeds (userId) {
 }
 
 
+async function getWishlist (userId) {
+    const wishlist = await db.Wishlist.find({ userId: userId }).exec();
+    let result = {};
+
+    for (let item of wishlist) {
+        result[item.materialId] = item.quantity;
+    }
+
+    return result;
+}
+
+
 async function updateBasketQuantity (userId, materialId, quantity) {
     const shopping = await db.Shopping.findOne({
         userId: userId,
@@ -82,9 +96,38 @@ async function updateBasketQuantity (userId, materialId, quantity) {
 }
 
 
+async function updateWishlistQuantity (userId, materialId, quantity) {
+    const wishlist = await db.Wishlist.findOne({
+        userId: userId,
+        materialId: materialId,
+    }).exec();
+
+    if (wishlist) {
+        if (quantity <= 0) {
+            await wishlist.remove().exec();
+        } else {
+            wishlist.quantity = quantity;
+            const result = await wishlist.save();
+        }
+    } else {
+        const wishlist = new db.Wishlist({
+            userId: userId,
+            materialId: materialId,
+            quantity: quantity,
+        });
+        await wishlist.save();
+    }
+
+    let result = await getWishlist(userId);
+    return result;
+}
+
+
 module.exports = {
     getBasket,
     getNeeds,
+    getWishlist,
     updateBasketQuantity,
+    updateWishlistQuantity,
 };
 
