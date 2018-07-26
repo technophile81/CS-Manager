@@ -1,25 +1,75 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import axios from 'axios';
 
 import './App.css';
 
 import AppContext from './components/AppContext';
 
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
+import NavBar from './components/NavBar';
 
-// import InventoryList from './components/InventoryList';
+import Inventory from './components/Inventory';
 import MaterialList from './components/MaterialList';
+import MaterialPicker from './components/MaterialPicker';
 import Project from './components/Project';
 import ProjectList from './components/ProjectList';
-// import Shopping from './components/Shopping';
-// import UserProfile from './components/UserProfile';
+import Shopping from './components/Shopping';
+import UserProfile from './components/UserProfile';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
+
+        this.allocateProjectMaterials = (projectId, allocation) => {
+            axios.post("/api/projects/" + projectId + "/materials", allocation).then((res) => {
+                this.updateProjectRequirements(projectId);
+            });
+        };
+
+        this.commitBasket = () => {
+            axios.post("/api/shopping", {}).then((res) => {
+                this.updateShopping();
+            });
+        };
+
+        this.createProject = (project) => {
+            axios.post("/api/projects", project).then((res) => {
+                this.updateProjects();
+            });
+        };
+
+        this.modifyBasket = (materialId, quantity) => {
+            axios.put("/api/shopping/basket/" + materialId, { quantity }).then((res) => {
+                let shopping = this.state.shopping;
+                shopping.basket = res.data;
+
+                this.setState({ shopping });
+            });
+        };
+
+        this.modifyProject = (project) => {
+            axios.put("/api/projects/" + project._id, project).then((res) => {
+                this.updateProjects();
+            });
+        };
+
+        this.modifyProjectMaterialRequirement = (projectId, materialId, quantity) => {
+            axios.put("/api/projects/" + projectId + "/materials/" + materialId, { quantity }).then((res) => {
+                let projectRequirements = this.state.projectRequirements;
+                projectRequirements[projectId] = res.data;
+
+                this.setState({ projectRequirements });
+            });
+        };
+
+        this.modifyWishlist = (materialId, quantity) => {
+            axios.put("/api/shopping/wishlist/" + materialId, { quantity }).then((res) => {
+                let shopping = this.state.shopping;
+                shopping.wishlist = res.data;
+
+                this.setState({ shopping });
+            });
+        };
 
         this.sortMaterialsByHue = (materials) => {
             if (!materials) {
@@ -104,6 +154,10 @@ class App extends React.Component {
 
         this.updateInventory = () => {
             this.setState({ inventoryLoaded: true });
+
+            axios.get("/api/inventory").then((res) => {
+                this.setState({ inventory: res.data });
+            });
         };
 
         this.updateMaterials = () => {
@@ -117,7 +171,7 @@ class App extends React.Component {
                 } else {
                     this.sortMaterialsByHue(res.data);
                 }
-            })
+            });
         };
 
         this.updateProjects = () => {
@@ -138,7 +192,24 @@ class App extends React.Component {
                     projects: projects,
                     projectsKeys: projectsKeys,
                 });
-            })
+            });
+        };
+
+        this.updateProjectRequirements = (projectId) => {
+            axios.get("/api/projects/" + projectId + "/materials").then((res) => {
+                let projectRequirements = this.state.projectRequirements;
+                projectRequirements[projectId] = res.data;
+                
+                this.setState({ projectRequirements });
+            });
+        };
+
+        this.updateShopping = () => {
+            this.setState({ shoppingLoaded: true });
+
+            axios.get("/api/shopping").then((res) => {
+                this.setState({ shopping: res.data });
+            });
         };
 
         this.state = {
@@ -148,10 +219,21 @@ class App extends React.Component {
             materialsSort: 'hue',
             projects: {},
             projectsKeys: [],
+            projectRequirements: {},
+            shopping: {},
 
             inventoryLoaded: false,
             materialsLoaded: false,
             projectsLoaded: false,
+            shoppingLoaded: false,
+
+            allocateProjectMaterials: this.allocateProjectMaterials,
+            commitBasket: this.commitBasket,
+            createProject: this.createProject,
+            modifyBasket: this.modifyBasket,
+            modifyProject: this.modifyProject,
+            modifyProjectMaterialRequirement: this.modifyProjectMaterialRequirement,
+            modifyWishlist: this.modifyWishlist,
 
             sortMaterialsByHue: this.sortMaterialsByHue,
             sortMaterialsByName: this.sortMaterialsByName,
@@ -160,37 +242,38 @@ class App extends React.Component {
             updateInventory: this.updateInventory,
             updateMaterials: this.updateMaterials,
             updateProjects: this.updateProjects,
+            updateProjectRequirements: this.updateProjectRequirements,
+            updateShopping: this.updateShopping,
         };
     };
 
-    componentDidMount() {
+    componentWillMount() {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        axios.get('/api/authed').then((res) => {
+            // do nothing
+        }).catch((err) => {
+            if (err.response && err.response.status === 401) {
+                this.props.history.push("/login");
+            }
+        });
     };
 
     render() {
         return (
             <AppContext.Provider value={this.state}>
-                <Router>
-                    <div>
-                        <Route exact path="/" component={Home} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/register" component={Register} />
+                <NavBar />
 
-                        <Route path="/materials" component={MaterialList} />
-                        <Route path="/projects" component={ProjectList} />
-                        <Route path="/project/:id" component={Project} />
-                    </div>
-                </Router>
+                <Route path="/inventory" component={Inventory} />
+                <Route path="/materialPicker/:id" component={MaterialPicker} />
+                <Route path="/materials" component={MaterialList} />
+                <Route path="/profile" component={UserProfile} />
+                <Route path="/project/:id" component={Project} />
+                <Route path="/projects" component={ProjectList} />
+                <Route path="/shopping" component={Shopping} />
             </AppContext.Provider>
         );
     };
 }
 
-/*
-
-                    <Route path="/inventory" component={InventoryList} />
-                    <Route path="/profile" component={UserProfile} />
-                    <Route path="/shopping" component={Shopping} />
-                    */
 
 export default App;

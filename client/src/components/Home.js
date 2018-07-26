@@ -1,7 +1,5 @@
 import React from "react"
 
-import AppContext from './AppContext';
-
 
 class Home extends React.Component {
     render() {

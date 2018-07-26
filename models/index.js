@@ -18,5 +18,6 @@ module.exports = {
     Project: require('./project'),
     Shopping: require('./shopping'),
     User: require('./user'),
+    Wishlist: require('./wishlist'),
 };
 

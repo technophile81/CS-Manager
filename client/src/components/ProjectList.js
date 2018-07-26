@@ -24,6 +24,12 @@ class ProjectListElement extends React.Component {
 }
 
 class ProjectListInterior extends React.Component {
+    componentWillMount() {
+        if (!this.props.context.projectsLoaded) {
+            this.props.context.updateProjects();
+        }
+    }
+
     render() {
         return (
             <div>
@@ -53,11 +59,8 @@ class ProjectList extends React.Component {
             <AppContext.Consumer>
                 {
                     (context) => {
-                        if (!context.projectsLoaded) {
-                            context.updateProjects();
-                        }
-
                         return <ProjectListInterior
+                            context={context}
                             projectsKeys={context.projectsKeys}
                             projects={context.projects}
                             />
