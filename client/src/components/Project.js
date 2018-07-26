@@ -43,11 +43,11 @@ class ProjectDisplay extends React.Component {
 
         let quantities = {};
 
-        if (requirements) {
-            for (let materialId of Object.keys(requirements.totalRequired)) {
+        if (requirements[project._id]) {
+            for (let materialId of Object.keys(requirements[project._id].totalRequired)) {
                 quantities[materialId] = [
-                    requirements.allocatedFromInventory[materialId],
-                    requirements.totalRequired[materialId],
+                    requirements[project._id].allocatedFromInventory[materialId],
+                    requirements[project._id].totalRequired[materialId],
                 ];
             }
         }
@@ -94,8 +94,7 @@ class ProjectInterior extends React.Component {
             return <div>Project not found</div>
         }
 
-        let requirements = this.props.context.projectRequirements[params.id];
-        return <ProjectDisplay context={this.props.context} history={this.props.history} project={project} requirements={requirements} />
+        return <ProjectDisplay context={this.props.context} history={this.props.history} project={project} requirements={this.props.context.projectRequirements} />
     }
 }
 
