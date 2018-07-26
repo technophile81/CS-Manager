@@ -14,7 +14,7 @@ class MaterialListElement extends React.Component {
         };
 
         return (
-            <li key={this.props.material._id}>
+            <li>
                 <div className="materialColorBlock" style={styles}></div>
                 <span className="materialName">{this.props.material.name}</span>
                 <span className="materialSKU">({this.props.material.sku})</span>
@@ -36,7 +36,7 @@ class MaterialListInterior extends React.Component {
                     <ul>
                         {
                             this.props.materials.map((material) => (
-                                <MaterialListElement material={material} />
+                                <MaterialListElement key={material._id} material={material} />
                             ))
                         }
                     </ul>
@@ -52,7 +52,7 @@ class MaterialList extends React.Component {
             <AppContext.Consumer>
                 {
                     (context) => {
-                        if (context.materials.length === 0) {
+                        if (!context.materialsLoaded) {
                             context.updateMaterials();
                         }
 

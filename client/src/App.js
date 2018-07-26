@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import axios from 'axios';
 
 import './App.css';
 
 import AppContext from './components/AppContext';
 
-// import Home from './components/Home';
+import Home from './components/Home';
+import Login from './components/Login';
+import Register from './components/Register';
+
 // import InventoryList from './components/InventoryList';
-// import Login from './components/Login';
 import MaterialList from './components/MaterialList';
-// import ProjectList from './components/ProjectList';
-// import Register from './components/Register';
+import ProjectList from './components/ProjectList';
 // import Shopping from './components/Shopping';
 // import UserProfile from './components/UserProfile';
 
@@ -67,21 +68,33 @@ class App extends React.Component {
         };
 
         this.updateInventory = () => {
+            this.setState({ inventoryLoaded: true });
         };
 
         this.updateMaterials = () => {
+            this.setState({ materialsLoaded: true });
+
             axios.get("/api/materials").then((res) => {
                 this.setState({ materials: res.data });
             })
         };
 
         this.updateProjects = () => {
+            this.setState({ projectsLoaded: true });
+
+            axios.get("/api/projects").then((res) => {
+                this.setState({ projects: res.data });
+            })
         };
 
         this.state = {
             inventory: [],
             materials: [],
             projects: [],
+
+            inventoryLoaded: false,
+            materialsLoaded: false,
+            projectsLoaded: false,
 
             sortMaterialsByHue: this.sortMaterialsByHue,
             sortMaterialsByName: this.sortMaterialsByName,
@@ -102,7 +115,12 @@ class App extends React.Component {
             <AppContext.Provider value={this.state}>
                 <Router>
                     <div>
+                        <Route exact path="/" component={Home} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/register" component={Register} />
+
                         <Route path="/materials" component={MaterialList} />
+                        <Route path="/projects" component={ProjectList} />
                     </div>
                 </Router>
             </AppContext.Provider>
@@ -111,14 +129,9 @@ class App extends React.Component {
 }
 
 /*
-                    <Route exact path="/" component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/register" component={Register} />
 
                     <Route path="/inventory" component={InventoryList} />
-                    <Route path="/materials" component={MaterialList} />
                     <Route path="/profile" component={UserProfile} />
-                    <Route path="/projects" component={ProjectList} />
                     <Route path="/shopping" component={Shopping} />
                     */
 
